@@ -30,4 +30,4 @@ override.tf.json
 
 # USER DEFINITIONS
 # Ignore .terraform.lock.hcl 
-*lock.hcl
+*.lock.hcl
