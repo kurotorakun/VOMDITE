@@ -21,7 +21,7 @@ data "template_file" "userDefault" {
 }
 
 # cloud-init meta data file
-data "template_file" "metaDefault" {
+data "template_file" "srv_metaDefault" {
   for_each = toset([ for app_srv in var.application_servers : app_srv.name ]) # List of IPs Addresses and Server IDs
   template = file("metadata.tpl")
   vars = {

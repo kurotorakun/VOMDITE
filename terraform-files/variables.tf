@@ -28,6 +28,22 @@ variable "esxi_password" { # set this by environment var with 'export TF_VAR_esx
 }
 
 #########################################
+#  Networking vars
+#########################################
+variable "network_list" {
+  description = "List of object that contains the network names. Used on vSwitch and PortGroups"
+  # Created as a list of object due that for_each cannot access primitive types (i.e string)
+  type        = list(object({ 
+                  name = string
+                }))
+  default     = [ # Adding more object will increase the amount of networks created
+                  { name = "BackendLAN" },
+                  { name = "FrontendLAN" },
+                  { name = "ClientLAN" }
+                ]
+}
+
+#########################################
 #  VMs Procurement vars
 #########################################
 variable "ovf_repository_path" {
@@ -35,10 +51,17 @@ variable "ovf_repository_path" {
   type        = string
   default     = "/home/sshfs/OVF" # To be used on TFG workspace
 }
+
 variable "ovf_path_server" {
   description = "Path that contains Server OVF Image"
   type        = string
   default     = "ubuntu-cloudimg/ubuntu-cloudimg.ovf" # To be used on TFG workspace
+}
+
+variable "ovf_path_ansiblehost" {
+  description = "Path that contains Server OVF Image"
+  type        = string
+  default     = "xubuntu-cloudimg/xubuntu2004.ovf" # To be used on TFG workspace
 }
 
 #########################################

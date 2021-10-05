@@ -21,12 +21,11 @@ resource "esxi_guest" "srv0xx" {
     "userdata.encoding" = "base64"
     "userdata"          = base64encode(data.template_file.userDefault.rendered)
     "metadata.encoding" = "base64"
-    "metadata"          = base64encode(data.template_file.metaDefault[each.key].rendered)
+    "metadata"          = base64encode(data.template_file.srv_metaDefault[each.key].rendered)
   }
   
   network_interfaces {
-    # virtual_network = esxi_portgroup.myportgroup.name  # Connecting to the portgroup defined on network.tf
-    virtual_network = "VM Network"
+    virtual_network = esxi_portgroup.PGx["BackendLAN"].name  # Connecting to the portgroup defined on network.tf
     nic_type        = "e1000"
   }
 

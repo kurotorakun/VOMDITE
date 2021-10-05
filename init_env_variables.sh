@@ -20,7 +20,7 @@ echo "Please, insert your ESXi Host or IP address: [192.168.27.141]"
 read TF_VAR_esxi_hostname
 echo "Please, insert your ESXi [root] password:"
 read -s TF_VAR_esxi_password
-echo "Please, insert your Application Backend CIDR: [192.168.27]"
+echo "Please, insert your Application Backend CIDR: [172.16.0]"
 read TF_VAR_apps_CIDR_block
 echo "Please, insert your Linux client host [user] password:"
 read -s TF_VAR_linux_client_userpassword
