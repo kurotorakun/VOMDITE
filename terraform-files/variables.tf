@@ -1,4 +1,3 @@
-
 #########################################
 #  ESXI Connection vars
 #########################################
@@ -37,9 +36,14 @@ variable "network_list" {
                   name = string
                 }))
   default     = [ # Adding more object will increase the amount of networks created
-                  { name = "BackendLAN" },
-                  { name = "FrontendLAN" },
-                  { name = "ClientLAN" }
+                  { name = "LANUplink" },      # LAN-Uplink     - client-officerouter uplink 
+                  { name = "LANWAN1Uplink" },  # WAN1-Uplink    - officerouter-internet uplink - primary
+                  { name = "LANWAN2Uplink" },  # WAN2-Uplink    - officerouter-internet uplink - secondary
+                  { name = "DCWAN1Uplink" },   # DC-WAN1-Uplink - DCrouter-internet uplink - primary
+                  { name = "DCWAN2Uplink" },   # DC-WAN2-Uplink - DCrouter-internet uplink - secondary
+                  { name = "DCUplink" },       # DC-Uplink      - LoadBalancer-DCrouter uplink
+                  { name = "FER1Uplink" },     # FER1-Uplink    - FrontEnd Region 1 Uplink
+                  { name = "FER2Uplink" }      # FER2-Uplink    - FrontEnd Region 2 Uplink
                 ]
 }
 
@@ -49,7 +53,7 @@ variable "network_list" {
 variable "ovf_repository_path" {
   description = "Path that contains Server OVF Image"
   type        = string
-  default     = "/home/sshfs/OVF" # To be used on TFG workspace
+  default     = "http://localhost:8022/OVF/" # Images are mapped to workspace 'static-server' service to ease the loading.
 }
 
 variable "ovf_path_server" {
@@ -59,9 +63,10 @@ variable "ovf_path_server" {
 }
 
 variable "ovf_path_ansiblehost" {
-  description = "Path that contains Server OVF Image"
+  description = "Path that contains Ansible service OVF Image"
   type        = string
-  default     = "xubuntu-cloudimg/xubuntu2004.ovf" # To be used on TFG workspace
+  default     = "ubuntu-cloudimg/ubuntu-cloudimg.ovf" # To be used on TFG workspace
+  # default     = "xubuntu-cloudimg/xubuntu2004.ovf" # initially deployed as xubuntu (with GUI)
 }
 
 #########################################
@@ -90,25 +95,25 @@ variable "application_servers" {
 #  Linux VMs vars
 #########################################
 
-variable "linux_client_username" {
-  description = "Linux client host username"
-  type        = string
-  default     = "user"
-}
+# variable "linux_client_username" {
+#   description = "Linux client host username"
+#   type        = string
+#   default     = "user"
+# }
+# 
+# variable "linux_client_userpassword" { # Unspecified will prompt
+#   description = "Linux pass"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "linux_client_userpassword" { # Unspecified will prompt
-  description = "Linux pass"
-  type        = string
-  sensitive   = true
-}
-
-variable "linux_server_username" {
+variable "linux_username" {
   description = "Linux server host username"
   type        = string
   default     = "ubuntu"
 }
 
-variable "linux_server_userpassword" { # Unspecified will prompt
+variable "linux_userpassword" { # Unspecified will prompt
   description = "Linux pass"
   type        = string
   sensitive   = true
@@ -117,5 +122,5 @@ variable "linux_server_userpassword" { # Unspecified will prompt
 variable "host_pubkey_path" { # Unspecified will prompt
   description = "Host public key. Used to authenticate without password"
   type        = string
-  default     = "/home/user/.ssh/id_rsa.pub"
+  default     = "/home/abc/.ssh/id_rsa.pub" # workspace user is 'abc'
 }

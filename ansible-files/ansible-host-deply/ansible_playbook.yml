@@ -1,0 +1,17 @@
+---
+
+- hosts: ansible_hosts
+  become: true
+
+  tasks:
+#     - name: Install required system packages
+#       apt: name={{ item }} state=latest update_cache=yes
+#       loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+    - name: Add Ansible repository
+      apt_key:
+        url: ppa:ansible/ansible
+        state: present
+
+    - name: Update apt and install ansible
+      apt: update_cache=yes name=ansible state=latest

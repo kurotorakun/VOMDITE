@@ -19,13 +19,13 @@ resource "esxi_guest" "srv0xx" {
   
   guestinfo = {
     "userdata.encoding" = "base64"
-    "userdata"          = base64encode(data.template_file.userDefault.rendered)
+    "userdata"          = base64encode(data.template_file.ans_userDefault.rendered)
     "metadata.encoding" = "base64"
     "metadata"          = base64encode(data.template_file.srv_metaDefault[each.key].rendered)
   }
   
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["BackendLAN"].name  # Connecting to the portgroup defined on network.tf
+    virtual_network = esxi_portgroup.PGx["FER1Uplink"].name  # Connecting to the portgroup defined on network.tf
     nic_type        = "e1000"
   }
 
@@ -36,5 +36,5 @@ resource "esxi_guest" "srv0xx" {
     command = "echo '${self.guest_name}: ${self.ip_address}' >> infrastructure_deployment_report.txt"
   }
   
-  # depends_on = [esxi_guest.template_ubuntu2004, esxi_guest.chr001]
+  depends_on = [esxi_guest.ans001] 
 }
