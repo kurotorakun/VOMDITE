@@ -25,7 +25,7 @@ resource "esxi_guest" "srv0xx" {
   }
   
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["FER1Uplink"].name  # Connecting to the portgroup defined on network.tf
+    virtual_network = esxi_portgroup.PGx["AZ1-Uplink"].name  # Connecting to the portgroup defined on network.tf
     nic_type        = "e1000"
   }
 

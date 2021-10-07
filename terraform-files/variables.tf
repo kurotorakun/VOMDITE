@@ -36,14 +36,14 @@ variable "network_list" {
                   name = string
                 }))
   default     = [ # Adding more object will increase the amount of networks created
-                  { name = "LANUplink" },      # LAN-Uplink     - client-officerouter uplink 
-                  { name = "LANWAN1Uplink" },  # WAN1-Uplink    - officerouter-internet uplink - primary
-                  { name = "LANWAN2Uplink" },  # WAN2-Uplink    - officerouter-internet uplink - secondary
-                  { name = "DCWAN1Uplink" },   # DC-WAN1-Uplink - DCrouter-internet uplink - primary
-                  { name = "DCWAN2Uplink" },   # DC-WAN2-Uplink - DCrouter-internet uplink - secondary
-                  { name = "DCUplink" },       # DC-Uplink      - LoadBalancer-DCrouter uplink
-                  { name = "FER1Uplink" },     # FER1-Uplink    - FrontEnd Region 1 Uplink
-                  { name = "FER2Uplink" }      # FER2-Uplink    - FrontEnd Region 2 Uplink
+                  { name = "LAN-Uplink" },      # LAN-Uplink     - client-officerouter uplink 
+                  { name = "WAN1-Uplink" },     # WAN1-Uplink    - officerouter-internet uplink - primary
+                  { name = "WAN2-Uplink" },     # WAN2-Uplink    - officerouter-internet uplink - secondary
+                  { name = "DC-WAN1-Uplink" },  # DC-WAN1-Uplink - DCrouter-internet uplink - primary
+                  { name = "DC-WAN2-Uplink" },  # DC-WAN2-Uplink - DCrouter-internet uplink - secondary
+                  { name = "DC-Uplink" },       # DC-Uplink      - LoadBalancer-DCrouter uplink
+                  { name = "AZ1-Uplink" },      # AZ1-Uplink     - FrontEnd Region 1 Uplink
+                  { name = "AZ2-Uplink" }       # AZ2-Uplink     - FrontEnd Region 2 Uplink
                 ]
 }
 
@@ -59,13 +59,14 @@ variable "ovf_repository_path" {
 variable "ovf_path_server" {
   description = "Path that contains Server OVF Image"
   type        = string
-  default     = "ubuntu-cloudimg/ubuntu-cloudimg.ovf" # To be used on TFG workspace
+  # default     = "ubuntu-cloudimg/ubuntu-cloudimg.ovf" # To be used on TFG workspace
+  default     = "focal-server-cloudimg-amd64.ova" # To be used on TFG workspace
 }
 
 variable "ovf_path_ansiblehost" {
   description = "Path that contains Ansible service OVF Image"
   type        = string
-  default     = "ubuntu-cloudimg/ubuntu-cloudimg.ovf" # To be used on TFG workspace
+  default     = "focal-server-cloudimg-amd64.ova" # To be used on TFG workspace
   # default     = "xubuntu-cloudimg/xubuntu2004.ovf" # initially deployed as xubuntu (with GUI)
 }
 

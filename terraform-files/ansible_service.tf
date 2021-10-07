@@ -13,9 +13,8 @@ resource "esxi_guest" "ans001" {
   resource_pool_name = "/"
   power              = "on"
 
-  # ovf_source        = "${var.ovf_repository_path}/${var.ovf_path_ansiblehost}"
-  ovf_source         = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.ova"
-  
+  ovf_source        = "${var.ovf_repository_path}/${var.ovf_path_ansiblehost}"
+    
   guestinfo = {
     "userdata.encoding" = "base64"
     "userdata"          = base64encode(data.template_file.ans_userDefault.rendered)
@@ -30,42 +29,42 @@ resource "esxi_guest" "ans001" {
   }
 
   network_interfaces { ## Created with name ens33
-    virtual_network = esxi_portgroup.PGx["LANUplink"].name
+    virtual_network = esxi_portgroup.PGx["LAN-Uplink"].name
     nic_type        = "e1000"
   }
 
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["LANWAN1Uplink"].name
+    virtual_network = esxi_portgroup.PGx["WAN1-Uplink"].name
     nic_type        = "e1000"
   }
 
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["LANWAN2Uplink"].name
+    virtual_network = esxi_portgroup.PGx["WAN2-Uplink"].name
     nic_type        = "e1000"
   }
 
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["DCWAN1Uplink"].name
+    virtual_network = esxi_portgroup.PGx["DC-WAN1-Uplink"].name
     nic_type        = "e1000"
   }
 
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["DCWAN2Uplink"].name
+    virtual_network = esxi_portgroup.PGx["DC-WAN2-Uplink"].name
     nic_type        = "e1000"
   }
 
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["DCUplink"].name
+    virtual_network = esxi_portgroup.PGx["DC-Uplink"].name
     nic_type        = "e1000"
   }
 
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["FER1Uplink"].name
+    virtual_network = esxi_portgroup.PGx["AZ1-Uplink"].name
     nic_type        = "e1000"
   }
 
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["FER2Uplink"].name
+    virtual_network = esxi_portgroup.PGx["AZ2-Uplink"].name
     nic_type        = "e1000"
   }
   
@@ -73,7 +72,7 @@ resource "esxi_guest" "ans001" {
   guest_shutdown_timeout = 30
 
   provisioner "local-exec" {
-    command = "echo '${self.guest_name}: ${self.ip_address}' >> infrastructure_deployment_report.txt"
+    command = "echo '${self.guest_name}: ${self.ip_address}' >> infrastructure_deployment_report.txt ; ssh -o StrictHostKeyChecking=no -t ubuntu@192.168.27.250 'sudo chown ubuntu:ubuntu ./.ssh/*id_rsa*'"
   }
   
   # depends_on = [esxi_guest.template_ubuntu2004, esxi_guest.chr001]

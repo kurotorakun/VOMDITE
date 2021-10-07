@@ -1,7 +1,10 @@
 #cloud-config
 
-instance-id: ${HOSTNAME}01
+instance-id: ${HOSTNAME}
 local-hostname: ${HOSTNAME}
+
+public-keys: 
+  - ${HOSTPUBKEY}
 
 network:
   version: 2
