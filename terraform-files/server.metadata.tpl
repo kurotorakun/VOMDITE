@@ -1,4 +1,4 @@
-#cloud-config 
+#cloud-config
 
 instance-id: ${HOSTNAME}
 local-hostname: ${HOSTNAME}
@@ -13,7 +13,7 @@ network:
     ens32:
       dhcp4: no
       dhcp6: no
-      addresses: [${APPS_CIDR_BLOCK}.${IP_ADDRESS}/24]
-      gateway4: ${APPS_CIDR_BLOCK}.2
+      addresses: [${APPSCIDRBLOCK}.${IPADDRESS}/24]
+      gateway4: ${APPSCIDRBLOCK}.2
       nameservers:
-        addresses: [${APPS_CIDR_BLOCK}.2, 8.8.8.8, 8.8.4.4]
+        addresses: [${APPSCIDRBLOCK}.2, 8.8.8.8, 8.8.4.4]

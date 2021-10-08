@@ -29,8 +29,8 @@ data "template_file" "srv_metaDefault" {
   for_each     = toset([ for app_srv in var.application_servers : app_srv.name ]) # List of IPs Addresses and Server IDs
   template     = file("server.metadata.tpl")
   vars         = {
-    APPS_CIDR_BLOCK = var.apps_CIDR_block
-    IP_ADDRESS      = each.key
+    APPSCIDRBLOCK   = var.appservice_AZ0_CIDR
+    IPADDRESS       = each.key
     HOSTNAME        = "srv0${each.key}"
     HOSTPUBKEY      = data.local_file.host_pubkey.content            # Use this only for simple files
     ANSIBLEPUBKEY   = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
@@ -41,8 +41,8 @@ data "template_file" "srv_metaDefault" {
 data "template_file" "ans_userDefault" { 
   template     = file("ansible.userdata.tpl")
   vars         = {
-    ANSIBLEKEY      = base64encode(data.local_file.ansible_id_rsa.content)       # BEST PRACTICE for files to be written in the host
-    ANSIBLEPUBKEY   = base64encode(data.local_file.ansible_id_rsa_pub.content)   # Use this only for simple files
+    ANSIBLEKEY        = base64encode(data.local_file.ansible_id_rsa.content)       # BEST PRACTICE for files to be written in the host
+    ANSIBLEPUBKEY     = base64encode(data.local_file.ansible_id_rsa_pub.content)   # Use this only for simple files
   }
 }
 
@@ -52,5 +52,9 @@ data "template_file" "ans_metaDefault" {
   vars         = {
     HOSTPUBKEY       = data.local_file.host_pubkey.content                    # Use this only for simple files
     HOSTNAME         = "ans001"
+    ANSIBLEADDRESS    = var.ansible_address
+    VMNETWORKCIDR     = var.VMNetwork_CIDR
+    APPSERVICEAZ0CIDR = var.appservice_AZ0_CIDR
+    APPSERVICEAZ1CIDR = var.appservice_AZ1_CIDR
   }
 }

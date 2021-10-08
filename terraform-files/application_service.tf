@@ -15,7 +15,7 @@ resource "esxi_guest" "srv0xx" {
   power              = "on"
 
   # clone_from_vm = "template_ubuntu2004" # Use it if your are clonning an existing VM
-  ovf_source        = "${var.ovf_repository_path}/${var.ovf_path_server}"
+  ovf_source        = "${var.ovf_repository_path}/${var.ovf_path_appservice}"
   
   guestinfo = {
     "userdata.encoding" = "base64"
@@ -25,7 +25,7 @@ resource "esxi_guest" "srv0xx" {
   }
   
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["AZ1-Uplink"].name  # Connecting to the portgroup defined on network.tf
+    virtual_network = esxi_portgroup.PGx["AZ0-Uplink"].name  # Connecting to the portgroup defined on network.tf
     nic_type        = "e1000"
   }
 
@@ -35,6 +35,5 @@ resource "esxi_guest" "srv0xx" {
   provisioner "local-exec" {
     command = "echo '${self.guest_name}: ${self.ip_address}' >> infrastructure_deployment_report.txt"
   }
-  
-  depends_on = [esxi_guest.ans001] 
+   
 }

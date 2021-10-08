@@ -1,4 +1,4 @@
-#cloud-config
+#cloud-config 
 
 instance-id: ${HOSTNAME}
 local-hostname: ${HOSTNAME}
@@ -12,13 +12,16 @@ network:
     ens32:
       dhcp4: no
       dhcp6: no
-      addresses: [192.168.27.250/24]
-      gateway4: 192.168.27.2
+      addresses: [${VMNETWORKCIDR}.${ANSIBLEADDRESS}/24]
+      gateway4: ${VMNETWORKCIDR}.2
       nameservers:
-        addresses: [192.168.27.2, 8.8.8.8, 8.8.4.4]
+        addresses: [${VMNETWORKCIDR}.2, 8.8.8.8, 8.8.4.4]
 
     ens33:
-      addresses: [192.168.100.250/24] #
+      addresses: [192.168.100.${ANSIBLEADDRESS}/24]
 
     ens39:
-      addresses: [172.16.0.250/24]    #
+      addresses: [${APPSERVICEAZ0CIDR}.${ANSIBLEADDRESS}/24]
+
+    ens40:
+      addresses: [${APPSERVICEAZ1CIDR}.${ANSIBLEADDRESS}/24]

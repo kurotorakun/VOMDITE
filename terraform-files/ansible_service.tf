@@ -29,7 +29,7 @@ resource "esxi_guest" "ans001" {
   }
 
   network_interfaces { ## Created with name ens33
-    virtual_network = esxi_portgroup.PGx["LAN-Uplink"].name
+    virtual_network = esxi_portgroup.PGx["LAN-Network"].name
     nic_type        = "e1000"
   }
 
@@ -59,12 +59,12 @@ resource "esxi_guest" "ans001" {
   }
 
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["AZ1-Uplink"].name
+    virtual_network = esxi_portgroup.PGx["AZ0-Uplink"].name
     nic_type        = "e1000"
   }
 
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["AZ2-Uplink"].name
+    virtual_network = esxi_portgroup.PGx["AZ1-Uplink"].name
     nic_type        = "e1000"
   }
   
@@ -75,5 +75,5 @@ resource "esxi_guest" "ans001" {
     command = "echo '${self.guest_name}: ${self.ip_address}' >> infrastructure_deployment_report.txt ; ssh -o StrictHostKeyChecking=no -t ubuntu@192.168.27.250 'sudo chown ubuntu:ubuntu ./.ssh/*id_rsa*'"
   }
   
-  # depends_on = [esxi_guest.template_ubuntu2004, esxi_guest.chr001]
+  depends_on = [esxi_guest.srv0xx] # srv0xx is an array of app server, but is 'dependable'
 }
