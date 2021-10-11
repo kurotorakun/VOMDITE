@@ -5,7 +5,6 @@
 
 variable "esxi_hostname" {        # Set to your ESXi host IP/hostname
   default     = "192.168.27.141"
-  sensitive   = true
 }
 
 variable "esxi_hostport" {        # ESXi ssh service is default configure to 22/TCP

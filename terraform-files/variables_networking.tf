@@ -26,29 +26,73 @@ variable "VMNetwork_CIDR" {       # Set this CIDR to the network of your VM Ware
   description = "VM Network CIDR"
   type        = string
   default     = "192.168.27"
-  sensitive   = true
+}
+
+variable "LAN_CIDR" {
+  description = "LAN Network Segment"
+  type        = string
+  default     = "192.168.100" 
+}
+
+variable "WAN1_uplink_CIDR" {
+  description = "WAN1 Uplink Network Segment (AZ0)"
+  type        = string
+  default     = "10.0.1" 
+}
+
+variable "WAN2_uplink_CIDR" {
+  description = "WAN1 Uplink Network Segment (AZ0)"
+  type        = string
+  default     = "10.0.2" 
+}
+
+variable "DCWAN1_uplink_CIDR" {
+  description = "DC-WAN1 Uplink Network Segment (AZ0)"
+  type        = string
+  default     = "10.1.1" 
+}
+
+variable "DCWAN2_uplink_CIDR" {
+  description = "DC-WAN2 Uplink Network Segment (AZ0)"
+  type        = string
+  default     = "10.1.2" 
+}
+
+variable "DC_uplink_CIDR" {
+  description = "Service Apps Network Segment (AZ0)"
+  type        = string
+  default     = "172.31.0" 
 }
 
 variable "appservice_AZ0_CIDR" {
   description = "Service Apps Network Segment (AZ0)"
   type        = string
   default     = "172.16.0" 
-  sensitive   = true
 }
 
 variable "appservice_AZ1_CIDR" {
   description = "Service Apps Network Segment (AZ1)"
   type        = string
   default     = "172.16.1"
-  sensitive   = true
 }
 
 # [ HOST ADDRESSING ]
+variable "uptime_address" {
+  description = "Uptime Monitoring Host Address"
+  type        = string
+  default     = "249"
+}
+
 variable "ansible_address" {
   description = "Ansible Host Address"
   type        = string
   default     = "250"
-  sensitive   = true
+}
+
+variable "monitoring_address" {
+  description = "Ansible Host Address"
+  type        = string
+  default     = "251"
 }
 
 variable "application_servers" {

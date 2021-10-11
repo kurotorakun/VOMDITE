@@ -1,7 +1,0 @@
----
-
-ansible_hosts:
-  hosts:
-    ans001:
-      ansible_host: 192.168.27.236
-      ansible_user: ubuntu

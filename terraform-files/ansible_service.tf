@@ -72,8 +72,18 @@ resource "esxi_guest" "ans001" {
   guest_shutdown_timeout = 30
 
   provisioner "local-exec" {
-    command = "echo '${self.guest_name}: ${self.ip_address}' >> infrastructure_deployment_report.txt ; ssh -o StrictHostKeyChecking=no -t ubuntu@192.168.27.250 'sudo chown ubuntu:ubuntu ./.ssh/*id_rsa*'"
+    command = <<EOT
+      echo '${self.guest_name}: ${self.ip_address}' >> ./logs/infrastructure_deployment_report.txt
+      ssh-keygen -R ${var.VMNetwork_CIDR}.${var.ansible_address}
+      ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'sudo mv /home/tmp/ssh/* ./.ssh/'
+      ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'sudo chown ubuntu:ubuntu ./.ssh/*id_rsa*'
+      ansible-playbook ${var.local_ansible_files_path}/ansible-host-deploy/ansible_playbook.yml -i ${var.VMNetwork_CIDR}.${var.ansible_address}, -u ${var.linux_username}
+      rsync -r --exclude '*.tpl' '${var.local_ansible_files_path}/ansible-application-deploy' ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address}:/home/ubuntu/
+      ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'ansible-playbook /home/ubuntu/ansible-application-deploy/application_playbook.yml -i /home/ubuntu/ansible-application-deploy/application_inventory.yml'
+      rm ${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml
+    EOT
   }
   
   depends_on = [esxi_guest.srv0xx] # srv0xx is an array of app server, but is 'dependable'
+  # depends_on = [esxi_guest.srv0xx, esxi_guest.srv1xx] # srv0xx and srv1xx are an arrays of app server, but are 'dependable'
 }
