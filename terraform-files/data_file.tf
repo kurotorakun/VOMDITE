@@ -41,6 +41,8 @@ data "template_file" "srv_az1_metaDefault" {
   }
 }
 
+
+
 # cloud-init user data file
 data "template_file" "ans_userDefault" { 
   template     = file("./template_files/ansible.userdata.tpl")
@@ -83,6 +85,18 @@ data "template_file" "uptime_metaDefault" {                            # UPTIME 
     WAN2UPLINKCIDR    = var.WAN2_uplink_CIDR
     DCWAN1UPLINKCIDR  = var.DCWAN1_uplink_CIDR
     DCWAN2UPLINKCIDR  = var.DCWAN2_uplink_CIDR
+    DCUPLINKCIDR      = var.DC_uplink_CIDR
+    APPSERVICEAZ0CIDR = var.appservice_AZ0_CIDR
+    APPSERVICEAZ1CIDR = var.appservice_AZ1_CIDR
+  }
+}
+
+data "template_file" "balancer_metaDefault" {                          # UPTIME service prowered by uptime-kuma
+  template     = file("./template_files/balancer.metadata.tpl")
+  vars         = {
+    HOSTNAME          = "lb001"
+    ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
+    IPADDRESS         = var.balancer_address
     DCUPLINKCIDR      = var.DC_uplink_CIDR
     APPSERVICEAZ0CIDR = var.appservice_AZ0_CIDR
     APPSERVICEAZ1CIDR = var.appservice_AZ1_CIDR

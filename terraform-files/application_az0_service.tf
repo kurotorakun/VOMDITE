@@ -25,12 +25,12 @@ resource "esxi_guest" "srv0xx" {
   }
 
   network_interfaces {
-    virtual_network = "VM Network"  # Connecting to the portgroup defined on network.tf
+    virtual_network = esxi_portgroup.PGx["AZ0-Uplink"].name  # Connecting to the portgroup defined on network.tf
     nic_type        = "e1000"
   }
-    
+
   network_interfaces {
-    virtual_network = esxi_portgroup.PGx["AZ0-Uplink"].name  # Connecting to the portgroup defined on network.tf
+    virtual_network = "VM Network"
     nic_type        = "e1000"
   }
 
@@ -38,19 +38,17 @@ resource "esxi_guest" "srv0xx" {
   guest_shutdown_timeout = 30
 
   provisioner "local-exec" {
-    # [ COMMANDS ]
-      # echo '    docker_host${each.key}:' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
-      # echo '      ansible_host: ${var.appservice_AZ0_CIDR}.${each.key}' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
-      # echo '      ansible_user: ${var.linux_username}' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
     command = <<EOT
       echo '${self.guest_name}: ${self.ip_address}' >> ./logs/infrastructure_deployment_report.txt
       [ ! -f "${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml" ] && cat '${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.tpl' > '${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml'
-      echo '    docker_host${each.key}:' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
-      echo '      ansible_host: ${var.appservice_AZ0_CIDR}.${each.key}' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
-      echo '      ansible_user: ${var.linux_username}' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
+      echo '    docker_host0${each.key}:' >> ${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml
+      echo '      ansible_host: ${var.appservice_AZ0_CIDR}.${each.key}' >> ${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml
+      echo '      ansible_user: ${var.linux_username}' >> ${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml
+      echo 'server ${var.appservice_AZ0_CIDR}.${each.key}:80;' > ${var.local_ansible_files_path}/ansible-balancer-deploy/${self.guest_name}_80.upstream.conf
+      echo 'server ${var.appservice_AZ0_CIDR}.${each.key}:81;' > ${var.local_ansible_files_path}/ansible-balancer-deploy/${self.guest_name}_81.upstream.conf
     EOT
   }
 
-depends_on = [esxi_guest.up001]
+  depends_on = [esxi_guest.up001, null_resource.deploy_uptime]
 
 }

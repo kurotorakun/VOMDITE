@@ -5,17 +5,20 @@ local-hostname: ${HOSTNAME}
 
 public-keys: 
   - ${ANSIBLEPUBKEY}
-  - ${HOSTPUBKEY}
 
 network:
   version: 2
   ethernets:
     ens32:
-      dhcp4: no
-      dhcp6: no
-      addresses: [${CIDRBLOCK}.${IPADDRESS}/24]
+      addresses: [${DCUPLINKCIDR}.${IPADDRESS}/24]
 
     ens33:
+      addresses: [${APPSERVICEAZ0CIDR}.${IPADDRESS}/24]
+
+    ens34:
+      addresses: [${APPSERVICEAZ1CIDR}.${IPADDRESS}/24]
+
+    ens35:
       dhcp4: yes
       dhcp4-overrides:
         route-metric: 1

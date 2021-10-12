@@ -1,14 +1,12 @@
 ---
 
-- hosts: docker_hosts
+- hosts: all
   become: true
-  vars_files:
-    - application_vars.yml
 
   tasks:
     - name: Install required system packages
       apt: name={{ item }} state=latest update_cache=yes
-      loop: [ 'curl', 'python3-pip', 'virtualenv', 'python3-setuptools', 'network-manager']
+      loop: [ 'curl', 'python3-pip', 'virtualenv', 'python3-setuptools' ]
 
     - name: Add Docker GPG apt Key
       apt_key:
@@ -29,16 +27,16 @@
 
     - name: Pull default Docker image
       docker_image:
-        name: "{{ default_container_image }}"
+        name: "nginx"
         source: pull
 
-    # Creates the number of containers defined by the variable create_containers, using values from vars file
     - name: Create default containers
       docker_container:
-        name: "{{ default_container_name }}{{ item }}"
-        image: "{{ default_container_image }}"
+        name: "balancer"
+        image: "nginx"
         detach: yes
         ports:
-          - "8{{ item }}:80"
+          - "80:80"
+        volumes:
+          - "/home/ubuntu/balancer:/etc/nginx/"
         state: started
-      with_sequence: start=0 end="{{ create_containers - 1}}"

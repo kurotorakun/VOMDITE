@@ -70,12 +70,8 @@ resource "esxi_guest" "up001" {
   guest_shutdown_timeout = 30
 
   provisioner "local-exec" {
-    # TODO: implement configuration write_files and set proper ownership for kuma docker image).
     command = <<EOT
       echo '${self.guest_name}: ${self.ip_address}' > ./logs/infrastructure_deployment_report.txt
-      ssh-keygen -R ${var.VMNetwork_CIDR}.${var.uptime_address}
-      ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.uptime_address} 'echo $HOSTNAME is alive'
-      ansible-playbook /home/project/VOMDITE/ansible-files/ansible-uptime-deploy/uptime_playbook.yml -i ${var.VMNetwork_CIDR}.${var.uptime_address}, -u ${var.linux_username}
     EOT
   }
   

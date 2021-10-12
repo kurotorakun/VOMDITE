@@ -77,6 +77,12 @@ variable "appservice_AZ1_CIDR" {
 }
 
 # [ HOST ADDRESSING ]
+variable "balancer_address" {
+  description = "Load Balancer Host Address"
+  type        = string
+  default     = "10"
+}
+
 variable "uptime_address" {
   description = "Uptime Monitoring Host Address"
   type        = string
