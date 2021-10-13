@@ -1,5 +1,6 @@
 # Data files 
 
+# [ SSH KEYS ]
 # Ansible service private key
 data "local_file" "ansible_id_rsa" {
     filename   = "./ssh_keys/ansible_id_rsa"
@@ -15,7 +16,16 @@ data "local_file" "host_pubkey" {
     filename   = var.host_pubkey_path
 }
 
-# cloud-init meta data file
+# [ SERVICE METADATA and USERDATA ]
+# CHR-LAN - USERDATA
+data "template_file" "chrlan_userDefault" {
+  template     = file("./template_files/chr-lan.rsc")
+  vars         = {
+    HOSTNAME       = "CHR-LAN"
+  }
+}
+
+# SRV0xx - METADATA
 data "template_file" "srv_az0_metaDefault" {
   for_each     = toset([ for app_srv in var.application_servers : app_srv.name ]) # List of IPs Addresses and Server IDs
   template     = file("./template_files/server.metadata.tpl")
@@ -28,7 +38,7 @@ data "template_file" "srv_az0_metaDefault" {
   }
 }
 
-# cloud-init meta data file
+# SRV1xx - METADATA
 data "template_file" "srv_az1_metaDefault" {
   for_each     = toset([ for app_srv in var.application_servers : app_srv.name ]) # List of IPs Addresses and Server IDs
   template     = file("./template_files/server.metadata.tpl")
@@ -41,9 +51,7 @@ data "template_file" "srv_az1_metaDefault" {
   }
 }
 
-
-
-# cloud-init user data file
+# ANS001 - USERDATA
 data "template_file" "ans_userDefault" { 
   template     = file("./template_files/ansible.userdata.tpl")
   vars         = {
@@ -52,7 +60,7 @@ data "template_file" "ans_userDefault" {
   }
 }
 
-# cloud-init meta data file
+# ANS001 - METADATA
 data "template_file" "ans_metaDefault" {
   template     = file("./template_files/ansible.metadata.tpl")
   vars         = {
@@ -71,7 +79,7 @@ data "template_file" "ans_metaDefault" {
   }
 }
 
-# cloud-init meta data file
+# UP001 - METADATA
 data "template_file" "uptime_metaDefault" {                            # UPTIME service prowered by uptime-kuma
   template     = file("./template_files/uptime.metadata.tpl")
   vars         = {
@@ -91,7 +99,8 @@ data "template_file" "uptime_metaDefault" {                            # UPTIME 
   }
 }
 
-data "template_file" "balancer_metaDefault" {                          # UPTIME service prowered by uptime-kuma
+# LB001 - METADATA
+data "template_file" "balancer_metaDefault" {
   template     = file("./template_files/balancer.metadata.tpl")
   vars         = {
     HOSTNAME          = "lb001"

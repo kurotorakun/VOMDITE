@@ -23,22 +23,22 @@ resource "esxi_guest" "lb001" {
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["DC-Uplink"].name
-    nic_type        = "e1000"
+    nic_type        = "vmxnet3"
   }
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["AZ0-Uplink"].name
-    nic_type        = "e1000"
+    nic_type        = "vmxnet3"
   }
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["AZ1-Uplink"].name
-    nic_type        = "e1000"
+    nic_type        = "vmxnet3"
   }
 
   network_interfaces { ## Created with name ens32 
     virtual_network = "VM Network" 
-    nic_type        = "e1000"
+    nic_type        = "vmxnet3"
   }
   
   guest_startup_timeout  = 45
@@ -51,6 +51,6 @@ resource "esxi_guest" "lb001" {
     EOT
   }
 
-  depends_on = [esxi_guest.srv0xx, esxi_guest.srv1xx, null_resource.deploy_applications]
+  depends_on = [ esxi_guest.srv0xx, esxi_guest.srv1xx ]
 
 }

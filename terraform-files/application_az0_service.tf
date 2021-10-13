@@ -26,12 +26,12 @@ resource "esxi_guest" "srv0xx" {
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["AZ0-Uplink"].name  # Connecting to the portgroup defined on network.tf
-    nic_type        = "e1000"
+    nic_type        = "vmxnet3"
   }
 
   network_interfaces {
     virtual_network = "VM Network"
-    nic_type        = "e1000"
+    nic_type        = "vmxnet3"
   }
 
   guest_startup_timeout  = 45

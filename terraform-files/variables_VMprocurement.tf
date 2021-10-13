@@ -3,12 +3,19 @@
 #    Do not edit if you are not sure of what are you doing.
 #############################################################
 
-# [ OVF ]
+# [ OVF REPOSITORY ]
 variable "ovf_repository_path" {                                     # Images are mapped to workspace 'static-server' service to ease the loading.
   description = "OVF Images repository"
   type        = string
   default     = "http://localhost:8022/OVF/"                         # LOCAL REPOSITORY (see documentation ____)
   # default     = "https://cloud-images.ubuntu.com/focal/current/"   # REMOTE REPOSITORY
+}
+
+# [ OVF IMAGES ]
+variable "ovf_path_routerservice" {                                     # Router Service OVF
+  description = "CHR - Routing Service OVF Image"
+  type        = string
+  default     = "CHR/chr-6.48.5.ova" 
 }
 
 variable "ovf_path_appservice" {                                     # Application Service OVF
