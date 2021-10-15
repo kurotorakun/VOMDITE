@@ -12,10 +12,34 @@ variable "ovf_repository_path" {                                     # Images ar
 }
 
 # [ OVF IMAGES ]
-variable "ovf_path_routerservice" {                                     # Router Service OVF
-  description = "CHR - Routing Service OVF Image"
+# variable "ovf_path_routerservice" {                                # Router Service OVF
+#   description = "CHR - Routing Service OVF Image"
+#   type        = string
+#   default     = "CHR/chr-6.48.5.ova" 
+# }
+
+variable "ovf_path_chr_dc_service" {                                 # Router Service OVF
+  description = "CHR-DC - Routing Service OVF Image"
   type        = string
-  default     = "CHR/chr-6.48.5.ova" 
+  default     = "CHR/chr-dc/chr-dc.ovf" 
+}
+
+variable "ovf_path_chr_lan_service" {                                # Router Service OVF
+  description = "CHR-LAN - Routing Service OVF Image"
+  type        = string
+  default     = "CHR/chr-lan/chr-lan.ovf" 
+}
+
+variable "ovf_path_chr_isp1_service" {                               # Router Service OVF
+  description = "CHR-ISP1 - Routing Service OVF Image"
+  type        = string
+  default     = "CHR/chr-isp1/chr-isp1.ovf" 
+}
+
+variable "ovf_path_chr_isp2_service" {                               # Router Service OVF
+  description = "CHR-ISP2 - Routing Service OVF Image"
+  type        = string
+  default     = "CHR/chr-isp2/chr-isp2.ovf" 
 }
 
 variable "ovf_path_appservice" {                                     # Application Service OVF
@@ -40,6 +64,12 @@ variable "ovf_path_balancerhost" {                                   # Ansible S
   description = "Load Balancer Service OVF Image"
   type        = string
   default     = "focal-server-cloudimg-amd64.ova" 
+}
+
+variable "ovf_path_guesthost" {                                      # Ansible Service OVF
+  description = "Guest client OVF Image"
+  type        = string
+  default     = "xubuntu-cloudimg/xubuntu2004.ovf" 
 }
 
 # [ ANSIBLE ]

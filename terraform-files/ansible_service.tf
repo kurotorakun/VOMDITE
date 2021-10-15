@@ -25,47 +25,47 @@ resource "esxi_guest" "ans001" {
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.
   network_interfaces { ## Created with name ens32 
     virtual_network = "VM Network" 
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
   network_interfaces { ## Created with name ens33
     virtual_network = esxi_portgroup.PGx["LAN-Network"].name
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["WAN1-Uplink"].name
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["WAN2-Uplink"].name
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["DC-WAN1-Uplink"].name
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["DC-WAN2-Uplink"].name
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["DC-Uplink"].name
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["AZ0-Uplink"].name
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["AZ1-Uplink"].name
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
   
   guest_startup_timeout  = 45
@@ -81,5 +81,6 @@ resource "esxi_guest" "ans001" {
     EOT
   }
   
-  depends_on = [esxi_guest.srv0xx, esxi_guest.srv1xx, esxi_guest.lb001] # srv0xx and srv1xx are an arrays of app server, but are 'dependable'
+  depends_on = [esxi_guest.srv0xx, esxi_guest.srv1xx, esxi_guest.lb001, esxi_guest.guest001 ] # srv0xx and srv1xx are an arrays of app server, but are 'dependable'
+
 }

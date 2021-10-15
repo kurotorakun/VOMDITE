@@ -16,6 +16,8 @@ resource "esxi_guest" "lb001" {
   ovf_source        = "${var.ovf_repository_path}/${var.ovf_path_balancerhost}"
     
   guestinfo = {
+    "userdata.encoding" = "base64"
+    "userdata"          = base64encode(data.template_file.noipv6_userDefault.rendered)
     "metadata.encoding" = "base64"
     "metadata"          = base64encode(data.template_file.balancer_metaDefault.rendered)
   }
@@ -23,23 +25,24 @@ resource "esxi_guest" "lb001" {
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["DC-Uplink"].name
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["AZ0-Uplink"].name
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["AZ1-Uplink"].name
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
-  network_interfaces { ## Created with name ens32 
-    virtual_network = "VM Network" 
-    nic_type        = "vmxnet3"
-  }
+  ## Not needed due that Internet access is done through CHR-DC and CHR-ISPx
+  # network_interfaces {
+  #   virtual_network = "VM Network" 
+  #   nic_type        = "e1000"
+  # }
   
   guest_startup_timeout  = 45
   guest_shutdown_timeout = 30
@@ -51,6 +54,6 @@ resource "esxi_guest" "lb001" {
     EOT
   }
 
-  depends_on = [ esxi_guest.srv0xx, esxi_guest.srv1xx ]
+  depends_on = [ esxi_guest.srv0xx, esxi_guest.srv1xx, esxi_guest.chr-dc ]
 
 }

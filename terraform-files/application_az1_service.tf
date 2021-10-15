@@ -1,4 +1,4 @@
-# Servers deployment 
+# Servers deployment
 
 resource "esxi_guest" "srv1xx" {
   for_each = toset([ for app_srv in var.application_servers : app_srv.name ]) # List of IPs Addresses and Server IDs
@@ -18,20 +18,20 @@ resource "esxi_guest" "srv1xx" {
   ovf_source        = "${var.ovf_repository_path}/${var.ovf_path_appservice}"
   
   guestinfo = {
-    # "userdata.encoding" = "base64"
-    # "userdata"          = base64encode(data.template_file.ans_userDefault.rendered)
+    "userdata.encoding" = "base64"
+    "userdata"          = base64encode(data.template_file.noipv6_userDefault.rendered)
     "metadata.encoding" = "base64"
     "metadata"          = base64encode(data.template_file.srv_az1_metaDefault[each.key].rendered)
   }
   
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["AZ1-Uplink"].name  # Connecting to the portgroup defined on network.tf
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
   network_interfaces {
     virtual_network = "VM Network"
-    nic_type        = "vmxnet3"
+    nic_type        = "e1000"
   }
 
   guest_startup_timeout  = 45
@@ -49,6 +49,6 @@ resource "esxi_guest" "srv1xx" {
     EOT
   }
 
-  depends_on = [esxi_guest.up001, null_resource.deploy_uptime ]
+  depends_on = [ esxi_guest.up001, null_resource.deploy_uptime ]
 
 }

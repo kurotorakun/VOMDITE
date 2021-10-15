@@ -40,3 +40,4 @@
         volumes:
           - "/home/ubuntu/balancer:/etc/nginx/"
         state: started
+        restart_policy: unless-stopped

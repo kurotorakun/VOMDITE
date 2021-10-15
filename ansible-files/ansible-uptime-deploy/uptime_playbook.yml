@@ -41,3 +41,4 @@
         volumes:
           - "/home/ubuntu/uptime/data:/app/data"
         state: started
+        restart_policy: unless-stopped

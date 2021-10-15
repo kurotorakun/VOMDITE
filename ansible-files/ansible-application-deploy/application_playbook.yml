@@ -41,4 +41,11 @@
         ports:
           - "8{{ item }}:80"
         state: started
+        restart_policy: unless-stopped
       with_sequence: start=0 end="{{ create_containers - 1}}"
+
+    # Disable management NIC (used to apply updates, deploy docker and its images.)
+    - name: Create default containers
+      net_interface:
+        name: ens33
+        description: down

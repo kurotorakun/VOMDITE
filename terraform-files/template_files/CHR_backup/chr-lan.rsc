@@ -1,4 +1,4 @@
-# oct/14/2021 16:02:11 by RouterOS 6.48.5
+# oct/15/2021 13:56:56 by RouterOS 6.48.5
 # software id = 
 #
 #
@@ -40,14 +40,12 @@ add address=10.0.2.1/24 interface=ether3 network=10.0.2.0
 /ip dhcp-client
 add disabled=no interface=ether1
 /ip dhcp-server network
-add address=192.168.100.0/24 dns-server=192.168.100.254 gateway=\
-    192.168.100.254
-/routing filter
-add action=discard chain=ospf-out prefix=10.0.1.0/24
-add action=discard chain=ospf-out prefix=10.0.2.0/24
+add address=192.168.100.0/24 dns-server=192.168.27.2 gateway=192.168.100.254
+/ip firewall nat
+add action=masquerade chain=srcnat src-address=192.168.100.0/24
 /routing ospf network
 add area=ISP1-OSPF-Area network=10.0.1.0/24
-add area=Corporate-OSPF-Area network=10.250.0.0/24
+add area=Corporate-OSPF-Area network=10.250.0.0/30
 /system identity
 set name=CHR-LAN
 /tool romon
