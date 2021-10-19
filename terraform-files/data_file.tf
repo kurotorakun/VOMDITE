@@ -110,6 +110,26 @@ data "template_file" "balancer_metaDefault" {
   }
 }
 
+# MON001 - METADATA
+data "template_file" "monitoring_metaDefault" {
+  template     = file("./template_files/monitoring.metadata.tpl")
+  vars         = {
+    HOSTNAME          = "mon001"
+    HOSTPUBKEY        = data.local_file.host_pubkey.content            # Use this only for simple files
+    ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
+    IPADDRESS         = var.monitoring_address
+    VMNETWORKCIDR     = var.VMNetwork_CIDR
+    LANCIDR           = var.LAN_CIDR
+    WAN1UPLINKCIDR    = var.WAN1_uplink_CIDR
+    WAN2UPLINKCIDR    = var.WAN2_uplink_CIDR
+    DCWAN1UPLINKCIDR  = var.DCWAN1_uplink_CIDR
+    DCWAN2UPLINKCIDR  = var.DCWAN2_uplink_CIDR
+    DCUPLINKCIDR      = var.DC_uplink_CIDR
+    APPSERVICEAZ0CIDR = var.appservice_AZ0_CIDR
+    APPSERVICEAZ1CIDR = var.appservice_AZ1_CIDR
+  }
+}
+
 # GUEST001 - METADATA
 data "template_file" "guest_metaDefault" {
   template     = file("./template_files/guest.metadata.tpl")
@@ -131,7 +151,7 @@ data "template_file" "ans_userDefault" {
   }
 }
 
-# SRV0xx - SRV1xx - UP001 - LB001 - USERDATA
+# SRV0xx - SRV1xx - UP001 - LB001 - MON001 - USERDATA
 data "template_file" "noipv6_userDefault" { 
   template     = file("./template_files/noipv6.userdata.tpl")
   vars         = {

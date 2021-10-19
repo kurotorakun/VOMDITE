@@ -8,8 +8,8 @@ resource "esxi_guest" "guest001" {
   boot_disk_type = "thin"
   boot_disk_size = "20"
 
-  memsize            = "1024"
-  numvcpus           = "1"
+  memsize            = "2048"
+  numvcpus           = "2"
   resource_pool_name = "/"
   power              = "on"
 

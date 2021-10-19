@@ -14,6 +14,18 @@ resource "null_resource" "deploy_uptime" {
   depends_on = [esxi_guest.up001]
 }
 
+resource "null_resource" "deploy_monitoring" {
+  provisioner "local-exec" {
+    command = <<EOT
+      ssh-keygen -R ${var.VMNetwork_CIDR}.${var.monitoring_address}
+      ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.monitoring_address} 'echo $HOSTNAME is alive'
+      ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.uptime_address} 'mkdir -p /home/ubuntu/zabbix/server/'
+      ansible-playbook ${var.local_ansible_files_path}/ansible-monitoring-deploy/monitoring_playbook.yml -i ${var.VMNetwork_CIDR}.${var.monitoring_address}, -u ${var.linux_username}
+    EOT
+  }
+  depends_on = [esxi_guest.mon001]
+}
+
 resource "null_resource" "deploy_applications" {
   provisioner "local-exec" {
     command = <<EOT

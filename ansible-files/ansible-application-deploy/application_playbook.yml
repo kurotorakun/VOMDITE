@@ -45,7 +45,7 @@
       with_sequence: start=0 end="{{ create_containers - 1}}"
 
     # Disable management NIC (used to apply updates, deploy docker and its images.)
-    - name: Create default containers
-      net_interface:
-        name: ens33
-        description: down
+    # - name: Disable Management NIC
+    #   net_interface:
+    #     name: ens33
+    #     description: down

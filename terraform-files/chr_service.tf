@@ -32,6 +32,11 @@ resource "esxi_guest" "chr-isp1" {
     nic_type        = "vmxnet3"
   }
 
+  network_interfaces {
+    virtual_network = esxi_portgroup.PGx["Internet-Network"].name
+    nic_type        = "vmxnet3"
+  }
+
   guest_startup_timeout  = 45
   guest_shutdown_timeout = 30
 
@@ -74,6 +79,11 @@ resource "esxi_guest" "chr-isp2" {
 
   network_interfaces {
     virtual_network = esxi_portgroup.PGx["DC-WAN2-Uplink"].name
+    nic_type        = "vmxnet3"
+  }
+
+  network_interfaces {
+    virtual_network = esxi_portgroup.PGx["Internet-Network"].name
     nic_type        = "vmxnet3"
   }
 

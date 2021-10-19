@@ -9,15 +9,16 @@ variable "network_list" {
   type        = list(object({ 
                   name = string
                 }))
-  default     = [                               # Adding more objects will increase amount of networks.
-                  { name = "LAN-Network" },     # LAN-Network    - client-officerouter uplink 
-                  { name = "WAN1-Uplink" },     # WAN1-Uplink    - officerouter-internet uplink - primary
-                  { name = "WAN2-Uplink" },     # WAN2-Uplink    - officerouter-internet uplink - secondary
-                  { name = "DC-WAN1-Uplink" },  # DC-WAN1-Uplink - DCrouter-internet uplink - primary
-                  { name = "DC-WAN2-Uplink" },  # DC-WAN2-Uplink - DCrouter-internet uplink - secondary
-                  { name = "DC-Uplink" },       # DC-Uplink      - LoadBalancer-DCrouter uplink
-                  { name = "AZ0-Uplink" },      # AZ0-Uplink     - FrontEnd Region 0 Uplink
-                  { name = "AZ1-Uplink" }       # AZ1-Uplink     - FrontEnd Region 1 Uplink
+  default     = [                                 # Adding more objects will increase amount of networks.
+                  { name = "LAN-Network" },       # LAN-Network      - client-officerouter uplink 
+                  { name = "WAN1-Uplink" },       # WAN1-Uplink      - officerouter-internet uplink - primary
+                  { name = "WAN2-Uplink" },       # WAN2-Uplink      - officerouter-internet uplink - secondary
+                  { name = "DC-WAN1-Uplink" },    # DC-WAN1-Uplink   - DCrouter-internet uplink - primary
+                  { name = "DC-WAN2-Uplink" },    # DC-WAN2-Uplink   - DCrouter-internet uplink - secondary
+                  { name = "Internet-Network" },  # Internet-Network - Link between ISP CHR
+                  { name = "DC-Uplink" },         # DC-Uplink        - LoadBalancer-DCrouter uplink
+                  { name = "AZ0-Uplink" },        # AZ0-Uplink       - FrontEnd Region 0 Uplink
+                  { name = "AZ1-Uplink" }         # AZ1-Uplink       - FrontEnd Region 1 Uplink
                 ]
 }
 

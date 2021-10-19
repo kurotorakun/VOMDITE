@@ -60,6 +60,12 @@ variable "ovf_path_uptimehost" {                                     # Ansible S
   default     = "focal-server-cloudimg-amd64.ova" 
 }
 
+variable "ovf_path_monitoringhost" {                                 # Ansible Service OVF
+  description = "Uptime Service OVF Image"
+  type        = string
+  default     = "focal-server-cloudimg-amd64.ova" 
+}
+
 variable "ovf_path_balancerhost" {                                   # Ansible Service OVF
   description = "Load Balancer Service OVF Image"
   type        = string
