@@ -8,5 +8,42 @@
       apt_repository:
         repo: ppa:ansible/ansible
 
-    - name: Update apt and install ansible
-      apt: update_cache=yes name=ansible state=latest
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'ansible', 'curl', 'python3-pip', 'virtualenv', 'python3-setuptools', 'network-manager']
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    # Pulling Monitoring Agent Image
+    - name: Pull default Application Docker image
+      docker_image:
+        name: "quay.io/prometheus/node-exporter:latest"
+        source: pull
+    
+    # Deploying Monitoring Agent Container
+    - name: Create Moniroting Agent Container
+      docker_container:
+        name: "prometheus-node"
+        image: "quay.io/prometheus/node-exporter:latest"
+        detach: yes
+        ports:
+          - "9100:9100"
+        volumes:
+          - "/:/host:ro,rslave"
+        state: started
+        restart_policy: unless-stopped

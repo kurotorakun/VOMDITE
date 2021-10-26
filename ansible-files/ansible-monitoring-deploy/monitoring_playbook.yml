@@ -25,20 +25,100 @@
       pip:
         name: docker
 
-    # - name: Pull default Docker image
-    #   docker_image:
-    #     name: "louislam/uptime-kuma"
-    #     source: pull
+    - name: Pull Docker images
+      docker_image:
+        name: "{{ item }}"
+        source: pull
+      with_items: 
+        - quay.io/prometheus/node-exporter:latest
+        - quay.io/prometheus/snmp-exporter:latest
+        - quay.io/prometheus/prometheus
+        - grafana/grafana-oss
 
-    # # Creates the number of containers defined by the variable create_containers, using values from vars file
-    # - name: Create default containers
-    #   docker_container:
-    #     name: "uptime"
-    #     image: "louislam/uptime-kuma"
-    #     detach: yes
-    #     ports:
-    #       - "80:3001"
-    #     volumes:
-    #       - "/home/ubuntu/uptime/data:/app/data"
-    #     state: started
-    #     restart_policy: unless-stopped
+    # Generate monitoring network
+    - name: Generate Docker Monitoring Network
+      docker_network:
+        name: monitoring_net
+
+    - name: Create Prometheus Node Exporter container
+      docker_container:
+        name: "prometheus-node"
+        image: "quay.io/prometheus/node-exporter:latest"
+        detach: yes
+        networks:
+          - name: "monitoring_net"
+        ports:
+          - "9100:9100"
+        volumes:
+          - "/:/host:ro,rslave"
+        state: started
+        restart_policy: unless-stopped
+    
+    - name: Create Prometheus SNMP Exporter container
+      docker_container:
+        name: "prometheus-snmp"
+        image: "quay.io/prometheus/snmp-exporter:latest"
+        detach: yes
+        networks:
+          - name: "monitoring_net"
+        ports:
+          - "9116:9116"
+        state: started
+        restart_policy: unless-stopped
+
+    - name: Create Prometheus container
+      docker_container:
+        name: "prometheus-server"
+        image: "quay.io/prometheus/prometheus:latest"
+        detach: yes
+        networks:
+          - name: "monitoring_net"
+        ports:
+          - "9090:9090"
+        volumes:
+          - "/docker_data/prometheus/data/:/etc/prometheus/"
+        state: started
+        restart_policy: unless-stopped
+    
+    - name: Create Grafana container
+      docker_container:
+        name: "grafana"
+        image: "grafana/grafana-oss"
+        detach: yes
+        networks:
+          - name: "monitoring_net"
+        ports:
+          - "80:3000"
+        env:
+          GF_SECURITY_ADMIN_PASSWORD: "VOMDITE"
+          GF_AUTH_BASIC_ENABLED: "true"
+        state: started
+        restart_policy: unless-stopped
+
+    - name: Load default datasource
+      grafana_datasource:
+        name: Prometheus
+        grafana_url: http://192.168.27.251/
+        url_username: "admin"
+        url_password: "VOMDITE"
+        ds_type: prometheus
+        ds_url: http://prometheus-server:9090/
+        access: proxy
+        is_default: yes
+        tls_skip_verify: true
+
+    - name: Load default dashboards (Node-exporter)
+      grafana_dashboard:
+        grafana_url: http://192.168.27.251/
+        url_username: "admin"
+        url_password: "VOMDITE"
+        dashboard_id: 1860
+        dashboard_revision: 23
+
+    - name: Load default dashboards (Mikrotik SNMP)
+      grafana_dashboard:
+        grafana_url: http://192.168.27.251/
+        url_username: "admin"
+        url_password: "VOMDITE"
+        dashboard_id: 11589
+        dashboard_revision: 3

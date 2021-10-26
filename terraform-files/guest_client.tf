@@ -16,10 +16,10 @@ resource "esxi_guest" "guest001" {
   ovf_source        = "${var.ovf_repository_path}/${var.ovf_path_guesthost}"
     
   guestinfo = {
-    "userdata.encoding" = "base64"
-    "userdata"          = base64encode(data.template_file.noipv6_userDefault.rendered)
+    # "userdata.encoding" = "base64"
+    # "userdata"          = base64encode(data.template_file.noipv6_userDefault.rendered)
     "metadata.encoding" = "base64"
-    "metadata"          = base64encode(data.template_file.guest_metaDefault.rendered)
+    "metadata"          = base64encode(local.guest_metaDefault)
   }
   
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.
@@ -37,6 +37,6 @@ resource "esxi_guest" "guest001" {
     EOT
   }
 
-  depends_on = [ esxi_guest.chr-lan ]
+  depends_on = [ esxi_guest.chr-lan, esxi_guest.lb001, null_resource.deploy_monitoring ]
 
 }

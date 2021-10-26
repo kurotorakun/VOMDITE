@@ -17,9 +17,9 @@ resource "esxi_guest" "up001" {
     
   guestinfo = {
     "userdata.encoding" = "base64"
-    "userdata"          = base64encode(data.template_file.noipv6_userDefault.rendered)
+    "userdata"          = base64encode(local.uptime_userDefault)
     "metadata.encoding" = "base64"
-    "metadata"          = base64encode(data.template_file.uptime_metaDefault.rendered)
+    "metadata"          = base64encode(local.uptime_metaDefault)
   }
   
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.

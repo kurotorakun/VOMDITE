@@ -1,4 +1,4 @@
-# Balancer service host deployment
+# Balancer service host deployment 
 
 resource "esxi_guest" "lb001" {
   guest_name = "lb001"
@@ -17,9 +17,9 @@ resource "esxi_guest" "lb001" {
     
   guestinfo = {
     "userdata.encoding" = "base64"
-    "userdata"          = base64encode(data.template_file.noipv6_userDefault.rendered)
+    "userdata"          = base64encode(local.balancer_userDefault)
     "metadata.encoding" = "base64"
-    "metadata"          = base64encode(data.template_file.balancer_metaDefault.rendered)
+    "metadata"          = base64encode(local.balancer_metaDefault)
   }
   
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.
@@ -38,11 +38,10 @@ resource "esxi_guest" "lb001" {
     nic_type        = "e1000"
   }
 
-  ## Not needed due that Internet access is done through CHR-DC and CHR-ISPx
-  # network_interfaces {
-  #   virtual_network = "VM Network" 
-  #   nic_type        = "e1000"
-  # }
+  network_interfaces {
+    virtual_network = "VM Network" 
+    nic_type        = "e1000"
+  }
   
   guest_startup_timeout  = 45
   guest_shutdown_timeout = 30

@@ -17,9 +17,9 @@ resource "esxi_guest" "ans001" {
     
   guestinfo = {
     "userdata.encoding" = "base64"
-    "userdata"          = base64encode(data.template_file.ans_userDefault.rendered)
+    "userdata"          = base64encode(local.ansible_userDefault) 
     "metadata.encoding" = "base64"
-    "metadata"          = base64encode(data.template_file.ans_metaDefault.rendered)
+    "metadata"          = base64encode(local.ansible_metaDefault)
   }
   
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.

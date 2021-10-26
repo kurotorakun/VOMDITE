@@ -39,6 +39,6 @@
         ports:
           - "80:3001"
         volumes:
-          - "/home/ubuntu/uptime/data:/app/data"
+          - "/docker_data/uptime/data:/app/data"
         state: started
         restart_policy: unless-stopped

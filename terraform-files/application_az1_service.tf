@@ -18,8 +18,8 @@ resource "esxi_guest" "srv1xx" {
   ovf_source        = "${var.ovf_repository_path}/${var.ovf_path_appservice}"
   
   guestinfo = {
-    "userdata.encoding" = "base64"
-    "userdata"          = base64encode(data.template_file.noipv6_userDefault.rendered)
+    # "userdata.encoding" = "base64"
+    # "userdata"          = base64encode(data.template_file.noipv6_userDefault.rendered)
     "metadata.encoding" = "base64"
     "metadata"          = base64encode(data.template_file.srv_az1_metaDefault[each.key].rendered)
   }
@@ -40,12 +40,12 @@ resource "esxi_guest" "srv1xx" {
   provisioner "local-exec" {
     command = <<EOT
       echo '${self.guest_name}: ${self.ip_address}' >> ./logs/infrastructure_deployment_report.txt
-      [ ! -f "${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml" ] && cat '${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.tpl' > '${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml'
-      echo '    docker_host1${each.key}:' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
-      echo '      ansible_host: ${var.appservice_AZ1_CIDR}.${each.key}' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
-      echo '      ansible_user: ${var.linux_username}' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
-      echo 'server ${var.appservice_AZ1_CIDR}.${each.key}:80;' > ${var.local_ansible_files_path}/ansible-balancer-deploy/${self.guest_name}_80.upstream.conf
-      echo 'server ${var.appservice_AZ1_CIDR}.${each.key}:81;' > ${var.local_ansible_files_path}/ansible-balancer-deploy/${self.guest_name}_81.upstream.conf
+      # [ ! -f "${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml" ] && cat '${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.tpl' > '${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml'
+      # echo '    docker_host1${each.key}:' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
+      # echo '      ansible_host: ${var.appservice_AZ1_CIDR}.${each.key}' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
+      # echo '      ansible_user: ${var.linux_username}' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
+      # echo 'server ${var.appservice_AZ1_CIDR}.${each.key}:80;' > ${var.local_ansible_files_path}/ansible-balancer-deploy/${self.guest_name}_80.upstream.conf
+      # echo 'server ${var.appservice_AZ1_CIDR}.${each.key}:81;' > ${var.local_ansible_files_path}/ansible-balancer-deploy/${self.guest_name}_81.upstream.conf
     EOT
   }
 
