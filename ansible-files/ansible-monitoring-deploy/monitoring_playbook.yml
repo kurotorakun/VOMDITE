@@ -94,6 +94,10 @@
           GF_AUTH_BASIC_ENABLED: "true"
         state: started
         restart_policy: unless-stopped
+    
+    - name: Pause for 30 seconds to build app
+      pause:
+        seconds: 30
 
     - name: Load default datasource
       grafana_datasource:

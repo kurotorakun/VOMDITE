@@ -4,9 +4,13 @@
   become: true
 
   tasks:
+    # In case ansible playbox is re-run after initial deploy.
+    - name: Enable Management NIC
+      command: ifconfig ens35 up
+
     - name: Install required system packages
       apt: name={{ item }} state=latest update_cache=yes
-      loop: [ 'curl', 'python3-pip', 'virtualenv', 'python3-setuptools', 'net-tools', 'network-manager' ]
+      loop: [ 'curl', 'python3-pip', 'virtualenv', 'python3-setuptools', 'net-tools','network-manager' ]
 
     - name: Add Docker GPG apt Key
       apt_key:
@@ -60,11 +64,14 @@
           - "/docker_data/balancer/:/etc/nginx/"
         state: started
         restart_policy: unless-stopped
-
+    
     - name: Disable Management NIC
-      nmcli:
-        conn_name: ens35
-        type: ethernet
-        method4: disabled
-        method6: disabled
-        state: present
+      command: ifconfig ens35 down
+
+#     - name: Disable Management NIC
+#       nmcli:
+#         conn_name: ens35
+#         type: ethernet
+#         method4: disabled
+#         method6: disabled
+#         state: present

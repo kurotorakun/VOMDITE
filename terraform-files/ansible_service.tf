@@ -81,6 +81,6 @@ resource "esxi_guest" "ans001" {
     EOT
   }
   
-  depends_on = [esxi_guest.srv0xx, esxi_guest.srv1xx, esxi_guest.lb001, esxi_guest.guest001 ] # srv0xx and srv1xx are an arrays of app server, but are 'dependable'
+  depends_on = [esxi_guest.srv0xx, esxi_guest.srv1xx, esxi_guest.lb001 ] # srv0xx and srv1xx are an arrays of app server, but are 'dependable'
 
 }

@@ -51,9 +51,9 @@ resource "null_resource" "deploy_applications" {
 }
 
 resource "null_resource" "deploy_balancer" {
-  triggers = {
-    always_run = timestamp()
-  }
+  # triggers = {
+  #   always_run = timestamp()
+  # }
 
   provisioner "local-exec" {
     # rsync -r '${var.local_ansible_files_path}/ansible-balancer-deploy' ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address}:/home/ubuntu/
@@ -67,5 +67,5 @@ resource "null_resource" "deploy_balancer" {
       ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'ansible-playbook /ansible_data/balancer_deploy/balancer_playbook.yml -i ${var.DC_uplink_CIDR}.${var.balancer_address}, -u ${var.linux_username}'
     EOT
   }
-  depends_on = [esxi_guest.lb001, null_resource.deploy_applications]
+  depends_on = [esxi_guest.lb001, esxi_guest.ans001, null_resource.deploy_applications]
 }

@@ -40,12 +40,6 @@ resource "esxi_guest" "srv1xx" {
   provisioner "local-exec" {
     command = <<EOT
       echo '${self.guest_name}: ${self.ip_address}' >> ./logs/infrastructure_deployment_report.txt
-      # [ ! -f "${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml" ] && cat '${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.tpl' > '${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml'
-      # echo '    docker_host1${each.key}:' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
-      # echo '      ansible_host: ${var.appservice_AZ1_CIDR}.${each.key}' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
-      # echo '      ansible_user: ${var.linux_username}' >> /home/project/VOMDITE/ansible-files/ansible-application-deploy/application_inventory.yml
-      # echo 'server ${var.appservice_AZ1_CIDR}.${each.key}:80;' > ${var.local_ansible_files_path}/ansible-balancer-deploy/${self.guest_name}_80.upstream.conf
-      # echo 'server ${var.appservice_AZ1_CIDR}.${each.key}:81;' > ${var.local_ansible_files_path}/ansible-balancer-deploy/${self.guest_name}_81.upstream.conf
     EOT
   }
 

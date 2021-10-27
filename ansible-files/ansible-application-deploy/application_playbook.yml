@@ -8,7 +8,7 @@
   tasks:
     - name: Install required system packages
       apt: name={{ item }} state=latest update_cache=yes
-      loop: [ 'curl', 'python3-pip', 'virtualenv', 'python3-setuptools', 'network-manager']
+      loop: [ 'curl', 'python3-pip', 'virtualenv', 'python3-setuptools' ]
 
     - name: Add Docker GPG apt Key
       apt_key:
@@ -62,9 +62,3 @@
         state: started
         restart_policy: unless-stopped
       with_sequence: start=0 end="{{ create_containers - 1}}"
-
-    # Disable management NIC (used to apply updates, deploy docker and its images.)
-    # - name: Disable Management NIC
-    #   net_interface:
-    #     name: ens33
-    #     description: down
