@@ -1,8 +1,8 @@
 # Guest client host deployment 
 
 resource "esxi_guest" "guest001" {
-  guest_name = "guest001"
-  disk_store = "DS001"
+  guest_name = var.guest_hostname
+  disk_store = var.esxi_datastore
   guestos    = "ubuntu-64"
 
   boot_disk_type = "thin"
@@ -16,8 +16,6 @@ resource "esxi_guest" "guest001" {
   ovf_source        = "${var.ovf_repository_path}/${var.ovf_path_guesthost}"
     
   guestinfo = {
-    # "userdata.encoding" = "base64"
-    # "userdata"          = base64encode(data.template_file.noipv6_userDefault.rendered)
     "metadata.encoding" = "base64"
     "metadata"          = base64encode(local.guest_metaDefault)
   }

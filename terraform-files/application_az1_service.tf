@@ -2,8 +2,8 @@
 
 resource "esxi_guest" "srv1xx" {
   for_each = toset([ for app_srv in var.application_servers : app_srv.name ]) # List of IPs Addresses and Server IDs
-  guest_name = "srv1${each.key}"
-  disk_store = "DS001"
+  guest_name = "${var.app_az1_hostname}${each.key}"
+  disk_store = var.esxi_datastore
   guestos    = "ubuntu-64"
 
   boot_disk_type = "thin"
@@ -18,8 +18,6 @@ resource "esxi_guest" "srv1xx" {
   ovf_source        = "${var.ovf_repository_path}/${var.ovf_path_appservice}"
   
   guestinfo = {
-    # "userdata.encoding" = "base64"
-    # "userdata"          = base64encode(data.template_file.noipv6_userDefault.rendered)
     "metadata.encoding" = "base64"
     "metadata"          = base64encode(data.template_file.srv_az1_metaDefault[each.key].rendered)
   }
@@ -30,7 +28,7 @@ resource "esxi_guest" "srv1xx" {
   }
 
   network_interfaces {
-    virtual_network = "VM Network"
+    virtual_network = var.esxi_default_network
     nic_type        = "e1000"
   }
 

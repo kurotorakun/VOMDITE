@@ -1,0 +1,16 @@
+---
+
+- hosts: all
+  vars_files:
+    - chr_vars.yml
+  environment:
+    remote_tmp: /
+
+  tasks:
+    - name: Add L7 Protocol to block youtube
+      routeros_command:
+        commands: /ip firewall layer7-protocol add name=youtube-block regexp="^.+(youtube.com).*\$"
+
+    - name: Add FW rule to block youtube
+      routeros_command:
+        commands: /ip firewall filter add action=drop chain=forward layer7-protocol=youtube-block comment="Block access to YouTube.com" disabled=yes

@@ -1,8 +1,8 @@
 # Ansible host deployment
 
 resource "esxi_guest" "ans001" {
-  guest_name = "ans001"
-  disk_store = "DS001"
+  guest_name = var.ansible_hostname
+  disk_store = var.esxi_datastore
   guestos    = "ubuntu-64"
 
   boot_disk_type = "thin"
@@ -24,7 +24,7 @@ resource "esxi_guest" "ans001" {
   
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.
   network_interfaces { ## Created with name ens32 
-    virtual_network = "VM Network" 
+    virtual_network = var.esxi_default_network
     nic_type        = "e1000"
   }
 

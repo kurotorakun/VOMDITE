@@ -1,17 +1,5 @@
 #cloud-config
 
-# users:
-#   - default
-# 
-# system_info:
-#   default_user:
-#     name: ubuntu
-#     home: /home/ubuntu
-#     shell: /bin/bash
-#     lock_passwd: False
-#     gecos: "Ubuntu User Admin"
-#     groups: [adm, audio, cdrom, dialout, floppy, video, plugdev, dip, netdev, sudo]
-
 write_files:
   - path: /home/tmp/ssh/id_rsa
     encoding: b64
@@ -45,3 +33,23 @@ write_files:
     permissions: "0644"
     owner: root:root
     content: ${APPINVENTORY}
+  - path: /ansible_data/chr_deploy/chr_vars.yml
+    encoding: b64
+    permissions: "0644"
+    owner: root:root
+    content: ${CHRVARS}
+  - path: /ansible_data/chr_deploy/chr_FWL7_deployment.yml
+    encoding: b64
+    permissions: "0644"
+    owner: root:root
+    content: ${CHRLANFWL7DEPLOY}
+  - path: /ansible_data/chr_deploy/chr_disable_FWL7.yml
+    encoding: b64
+    permissions: "0644"
+    owner: root:root
+    content: ${CHRLANDISFWL7}
+  - path: /ansible_data/chr_deploy/chr_enable_FWL7.yml
+    encoding: b64
+    permissions: "0644"
+    owner: root:root
+    content: ${CHRLANENAFWL7}

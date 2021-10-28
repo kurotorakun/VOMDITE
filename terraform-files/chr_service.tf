@@ -2,8 +2,8 @@
 
 # [ CHR-ISP1 ]
 resource "esxi_guest" "chr-isp1" {
-  guest_name = "chr-isp1"
-  disk_store = "DS001"
+  guest_name = var.chrisp1_hostname
+  disk_store = var.esxi_datastore
   guestos    = "ubuntu-64"
 
   boot_disk_type = "thin"
@@ -18,7 +18,7 @@ resource "esxi_guest" "chr-isp1" {
   
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.
   network_interfaces {
-    virtual_network = "VM Network"
+    virtual_network = var.esxi_default_network
     nic_type        = "vmxnet3"
   }
 
@@ -52,8 +52,8 @@ resource "esxi_guest" "chr-isp1" {
 
 # [ CHR-ISP2 ]
 resource "esxi_guest" "chr-isp2" {
-  guest_name = "chr-isp2"
-  disk_store = "DS001"
+  guest_name = var.chrisp2_hostname
+  disk_store = var.esxi_datastore
   guestos    = "ubuntu-64"
 
   boot_disk_type = "thin"
@@ -68,7 +68,7 @@ resource "esxi_guest" "chr-isp2" {
 
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.
   network_interfaces {
-    virtual_network = "VM Network"
+    virtual_network = var.esxi_default_network
     nic_type        = "vmxnet3"
   }
 
@@ -102,8 +102,8 @@ resource "esxi_guest" "chr-isp2" {
 
 # [ CHR-LAN ]
 resource "esxi_guest" "chr-lan" {
-  guest_name = "chr-lan"
-  disk_store = "DS001"
+  guest_name = var.chrlan_hostname
+  disk_store = var.esxi_datastore
   guestos    = "ubuntu-64"
 
   boot_disk_type = "thin"
@@ -118,7 +118,7 @@ resource "esxi_guest" "chr-lan" {
 
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.
   network_interfaces {
-    virtual_network = "VM Network"
+    virtual_network = var.esxi_default_network
     nic_type        = "vmxnet3"
   }
 
@@ -152,8 +152,8 @@ resource "esxi_guest" "chr-lan" {
 
 # [ CHR-DC ]
 resource "esxi_guest" "chr-dc" {
-  guest_name = "chr-dc"
-  disk_store = "DS001"
+  guest_name = var.chrdc_hostname
+  disk_store = var.esxi_datastore
   guestos    = "ubuntu-64"
 
   boot_disk_type = "thin"
@@ -168,7 +168,7 @@ resource "esxi_guest" "chr-dc" {
 
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.
   network_interfaces {
-    virtual_network = "VM Network"
+    virtual_network = var.esxi_default_network
     nic_type        = "vmxnet3"
   }
 

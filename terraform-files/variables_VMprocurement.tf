@@ -12,12 +12,6 @@ variable "ovf_repository_path" {                                     # Images ar
 }
 
 # [ OVF IMAGES ]
-# variable "ovf_path_routerservice" {                                # Router Service OVF
-#   description = "CHR - Routing Service OVF Image"
-#   type        = string
-#   default     = "CHR/chr-6.48.5.ova" 
-# }
-
 variable "ovf_path_chr_dc_service" {                                 # Router Service OVF
   description = "CHR-DC - Routing Service OVF Image"
   type        = string
@@ -78,7 +72,63 @@ variable "ovf_path_guesthost" {                                      # Ansible S
   default     = "xubuntu-cloudimg/xubuntu2004.ovf" 
 }
 
-# [ ANSIBLE ]
+# [ VMs IDs & HOSTNAMEs ]
+variable "ansible_hostname" {
+  type        = string
+  default     = "ans001"  
+}
+
+variable "app_az0_hostname" {
+  type        = string
+  default     = "srv0"  
+}
+
+variable "app_az1_hostname" {
+  type        = string
+  default     = "srv1"  
+}
+
+variable "balancer_hostname" {
+  type        = string
+  default     = "lb001"  
+}
+
+variable "chrisp1_hostname" {
+  type        = string
+  default     = "chr-isp1"  
+}
+
+variable "chrisp2_hostname" {
+  type        = string
+  default     = "chr-isp2"  
+}
+
+variable "chrlan_hostname" {
+  type        = string
+  default     = "chr-lan"  
+}
+
+variable "chrdc_hostname" {
+  type        = string
+  default     = "chr-dc"  
+}
+
+variable "uptime_hostname" {
+  type        = string
+  default     = "up001"  
+}
+
+variable "monitoring_hostname" {
+  type        = string
+  default     = "mon001"  
+}
+
+variable "guest_hostname" {
+  type        = string
+  default     = "guest001"  
+}
+
+# [ ANSIBLE PATHS ]
 variable "local_ansible_files_path" {
   description = "Local Ansible Path"
   type        = string

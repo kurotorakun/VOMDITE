@@ -8,7 +8,6 @@ locals {
     APPSERVICEAZ0CIDR = var.appservice_AZ0_CIDR
     APPSERVICEAZ1CIDR = var.appservice_AZ1_CIDR
     LINUXUSER         = var.linux_username
-
   })
   
   balancer_nginx_conf = templatefile("../ansible-files/ansible-balancer-deploy/nginx.tpl",{
@@ -35,7 +34,7 @@ locals {
   # ANS001 - METADATA
   ansible_metaDefault = templatefile("./template_files/ansible.metadata.tpl", {
     HOSTPUBKEY        = data.local_file.host_pubkey.content          # Use this only for simple files
-    HOSTNAME          = "ans001"
+    HOSTNAME          = var.ansible_hostname
     IPADDRESS         = var.ansible_address
     VMNETWORKCIDR     = var.VMNetwork_CIDR
     LANCIDR           = var.LAN_CIDR
@@ -50,7 +49,7 @@ locals {
 
   # UP001 - METADATA - service prowered by uptime-kuma
   uptime_metaDefault = templatefile("./template_files/uptime.metadata.tpl",{
-    HOSTNAME          = "up001"
+    HOSTNAME          = var.uptime_hostname
     HOSTPUBKEY        = data.local_file.host_pubkey.content            # Use this only for simple files
     ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
     IPADDRESS         = var.uptime_address
@@ -67,7 +66,7 @@ locals {
 
   # LB001 - METADATA
   balancer_metaDefault = templatefile("./template_files/balancer.metadata.tpl",{
-    HOSTNAME          = "lb001"
+    HOSTNAME          = var.balancer_hostname
     ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
     IPADDRESS         = var.balancer_address
     DCUPLINKCIDR      = var.DC_uplink_CIDR
@@ -77,7 +76,7 @@ locals {
 
   # MON001 - METADATA
   monitoring_metaDefault = templatefile("./template_files/monitoring.metadata.tpl", {
-    HOSTNAME          = "mon001"
+    HOSTNAME          = var.monitoring_hostname
     HOSTPUBKEY        = data.local_file.host_pubkey.content            # Use this only for simple files
     ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
     IPADDRESS         = var.monitoring_address
@@ -94,7 +93,7 @@ locals {
 
   # GUEST001 - METADATA
   guest_metaDefault = templatefile("./template_files/guest.metadata.tpl",{
-    HOSTNAME          = "guest001"
+    HOSTNAME          = var.guest_hostname
     HOSTPUBKEY        = data.local_file.host_pubkey.content            # Use this only for simple files
     ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
   })
@@ -110,6 +109,10 @@ locals {
     APPPB             = base64encode(data.local_file.application_playbook_yml.content)
     APPVARS           = base64encode(data.local_file.application_vars_yml.content)
     APPINVENTORY      = base64encode(local.application_inventory_yml)
+    CHRVARS           = base64encode(data.local_file.chr_vars_yml.content)
+    CHRLANFWL7DEPLOY  = base64encode(data.local_file.chr_lan_FWL7_deployment_yml.content)
+    CHRLANDISFWL7     = base64encode(data.local_file.chr_lan_disable_FWL7_yml.content)
+    CHRLANENAFWL7     = base64encode(data.local_file.chr_lan_enable_FWL7_yml.content)
   })
 
   # MON001 - USERDATA
@@ -119,7 +122,6 @@ locals {
   
   # UP001 - USERDATA
   uptime_userDefault = templatefile("./template_files/uptime.userdata.tpl",{
-    # KUMADB            = base64encode(data.local_file.kuma_db.content)
     KUMADB            = filebase64("../ansible-files/ansible-uptime-deploy/kuma.db")
   })
   
@@ -135,7 +137,6 @@ locals {
 
 }
 
-
 ### [ SERVICES METADATA ]
 
 # SRV0xx - METADATA
@@ -145,7 +146,7 @@ data "template_file" "srv_az0_metaDefault" {
   vars         = {
     CIDRBLOCK       = var.appservice_AZ0_CIDR
     IPADDRESS       = each.key
-    HOSTNAME        = "srv0${each.key}"
+    HOSTNAME        = "${var.app_az0_hostname}{each.key}"
     HOSTPUBKEY      = data.local_file.host_pubkey.content            # Use this only for simple files
     ANSIBLEPUBKEY   = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
   }
@@ -158,117 +159,8 @@ data "template_file" "srv_az1_metaDefault" {
   vars         = {
     CIDRBLOCK       = var.appservice_AZ1_CIDR
     IPADDRESS       = each.key
-    HOSTNAME        = "srv0${each.key}"
+    HOSTNAME        = "${var.app_az1_hostname}${each.key}"
     HOSTPUBKEY      = data.local_file.host_pubkey.content            # Use this only for simple files
     ANSIBLEPUBKEY   = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
   }
 }
-
-# ANS001 - METADATA
-# data "template_file" "ans_metaDefault" {
-#   template     = file("./template_files/ansible.metadata.tpl")
-#   vars         = {
-#     HOSTPUBKEY        = data.local_file.host_pubkey.content          # Use this only for simple files
-#     HOSTNAME          = "ans001"
-#     IPADDRESS         = var.ansible_address
-#     VMNETWORKCIDR     = var.VMNetwork_CIDR
-#     LANCIDR           = var.LAN_CIDR
-#     WAN1UPLINKCIDR    = var.WAN1_uplink_CIDR
-#     WAN2UPLINKCIDR    = var.WAN2_uplink_CIDR
-#     DCWAN1UPLINKCIDR  = var.DCWAN1_uplink_CIDR
-#     DCWAN2UPLINKCIDR  = var.DCWAN2_uplink_CIDR
-#     DCUPLINKCIDR      = var.DC_uplink_CIDR
-#     APPSERVICEAZ0CIDR = var.appservice_AZ0_CIDR
-#     APPSERVICEAZ1CIDR = var.appservice_AZ1_CIDR
-#   }
-# }
-
-# UP001 - METADATA
-# data "template_file" "uptime_metaDefault" {                            # UPTIME service prowered by uptime-kuma
-#   template     = file("./template_files/uptime.metadata.tpl")
-#   vars         = {
-#     HOSTNAME          = "up001"
-#     HOSTPUBKEY        = data.local_file.host_pubkey.content            # Use this only for simple files
-#     ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
-#     IPADDRESS         = var.uptime_address
-#     VMNETWORKCIDR     = var.VMNetwork_CIDR
-#     LANCIDR           = var.LAN_CIDR
-#     WAN1UPLINKCIDR    = var.WAN1_uplink_CIDR
-#     WAN2UPLINKCIDR    = var.WAN2_uplink_CIDR
-#     DCWAN1UPLINKCIDR  = var.DCWAN1_uplink_CIDR
-#     DCWAN2UPLINKCIDR  = var.DCWAN2_uplink_CIDR
-#     DCUPLINKCIDR      = var.DC_uplink_CIDR
-#     APPSERVICEAZ0CIDR = var.appservice_AZ0_CIDR
-#     APPSERVICEAZ1CIDR = var.appservice_AZ1_CIDR
-#   }
-# }
-
-# LB001 - METADATA
-# data "template_file" "balancer_metaDefault" {
-#   template     = file("./template_files/balancer.metadata.tpl")
-#   vars         = {
-#     HOSTNAME          = "lb001"
-#     ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
-#     IPADDRESS         = var.balancer_address
-#     DCUPLINKCIDR      = var.DC_uplink_CIDR
-#     APPSERVICEAZ0CIDR = var.appservice_AZ0_CIDR
-#     APPSERVICEAZ1CIDR = var.appservice_AZ1_CIDR
-#   }
-# }
-
-# MON001 - METADATA
-# data "template_file" "monitoring_metaDefault" {
-#   template     = file("./template_files/monitoring.metadata.tpl")
-#   vars         = {
-#     HOSTNAME          = "mon001"
-#     HOSTPUBKEY        = data.local_file.host_pubkey.content            # Use this only for simple files
-#     ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
-#     IPADDRESS         = var.monitoring_address
-#     VMNETWORKCIDR     = var.VMNetwork_CIDR
-#     LANCIDR           = var.LAN_CIDR
-#     WAN1UPLINKCIDR    = var.WAN1_uplink_CIDR
-#     WAN2UPLINKCIDR    = var.WAN2_uplink_CIDR
-#     DCWAN1UPLINKCIDR  = var.DCWAN1_uplink_CIDR
-#     DCWAN2UPLINKCIDR  = var.DCWAN2_uplink_CIDR
-#     DCUPLINKCIDR      = var.DC_uplink_CIDR
-#     APPSERVICEAZ0CIDR = var.appservice_AZ0_CIDR
-#     APPSERVICEAZ1CIDR = var.appservice_AZ1_CIDR
-#   }
-# }
-
-# GUEST001 - METADATA
-# data "template_file" "guest_metaDefault" {
-#   template     = file("./template_files/guest.metadata.tpl")
-#   vars         = {
-#     HOSTNAME          = "guest001"
-#     HOSTPUBKEY        = data.local_file.host_pubkey.content            # Use this only for simple files
-#     ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
-#   }
-# }
-
-### [ SERVICES USERDATA ]
-
-# ANS001 - USERDATA
-# data "template_file" "ans_userDefault" { 
-#   template     = file("./template_files/ansible.userdata.tpl")
-#   vars         = {
-#     ANSIBLEKEY        = base64encode(data.local_file.ansible_id_rsa.content)       # BEST PRACTICE for files to be written in the host
-#     ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content                 # Use this only for simple files
-#     NOIPV6            = base64encode(data.local_file.no_IPv6.content)
-#   }
-# }
-
-# data "template_file" "mon_userDefault" { 
-#   template     = file("./template_files/monitoring.userdata.tpl")
-#   vars         = {
-#     PROMETHEUSYML     = base64encode(local.prometheus_yml_config)
-#   }
-# }
-
-# SRV0xx - SRV1xx - UP001 - LB001 - MON001 - USERDATA
-# data "template_file" "noipv6_userDefault" { 
-#   template     = file("./template_files/noipv6.userdata.tpl")
-#   vars         = {
-#     NOIPV6            = base64encode(data.local_file.no_IPv6.content)
-#   }
-# }

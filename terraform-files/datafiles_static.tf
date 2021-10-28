@@ -41,8 +41,19 @@ data "local_file" "balancer_playbook_yml" {
     filename   = "../ansible-files/ansible-balancer-deploy/balancer_playbook.yml"
 }
 
-### [ SERVICE FILES - BACKUP]
-# Does not work.
-# data "local_file" "kuma_db" { 
-#     filename   = "../ansible-files/ansible-uptime-deploy/kuma.db"
-# }
+# 3.- Ansible Mikrotik CHR service "upgrade" deployment
+data "local_file" "chr_vars_yml"{
+    filename   = "../ansible-files/ansible-chr-deployment/chr_vars.yml"
+}
+
+data "local_file" "chr_lan_FWL7_deployment_yml"{
+    filename   = "../ansible-files/ansible-chr-deployment/chr-lan_FWL7_deployment.yml"
+}
+
+data "local_file" "chr_lan_disable_FWL7_yml"{
+    filename   = "../ansible-files/ansible-chr-deployment/chr-lan_disable_FWL7.yml"
+}
+
+data "local_file" "chr_lan_enable_FWL7_yml"{
+    filename   = "../ansible-files/ansible-chr-deployment/chr-lan_enable_FWL7.yml"
+}

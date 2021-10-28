@@ -6,3 +6,4 @@ write_files:
     permissions: "0644"
     owner: root:root
     content: ${NOIPV6}
+    

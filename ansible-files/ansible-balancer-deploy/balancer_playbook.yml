@@ -4,13 +4,16 @@
   become: true
 
   tasks:
+    - name: Install network required system packages
+      apt: name=net-tools state=latest update_cache=yes
+    
     # In case ansible playbox is re-run after initial deploy.
     - name: Enable Management NIC
       command: ifconfig ens35 up
 
     - name: Install required system packages
       apt: name={{ item }} state=latest update_cache=yes
-      loop: [ 'curl', 'python3-pip', 'virtualenv', 'python3-setuptools', 'net-tools','network-manager' ]
+      loop: [ 'curl', 'python3-pip', 'virtualenv', 'python3-setuptools' ]
 
     - name: Add Docker GPG apt Key
       apt_key:
@@ -34,12 +37,31 @@
         name: "nginx"
         source: pull
     
+    # Pullling honeypot Image
+    - name: Pull default Honeypot Docker image
+      docker_image:
+        name: "delfer/alpine-ftp-server"
+        source: pull
+    
     # Pulling Monitoring Agent Image
-    - name: Pull default Application Docker image
+    - name: Pull default Monitoring Docker image
       docker_image:
         name: "quay.io/prometheus/node-exporter:latest"
         source: pull
     
+    # Deploying Honeypot Container
+    - name: Create Honeypot Container
+      docker_container:
+        name: "honeypot"
+        image: "delfer/alpine-ftp-server"
+        detach: yes
+        ports:
+          - "2222:21"
+        env:
+          USERS: "user|VOMDITE"
+        state: started
+        restart_policy: unless-stopped
+
     # Deploying Monitoring Agent Container
     - name: Create Moniroting Agent Container
       docker_container:
@@ -67,11 +89,3 @@
     
     - name: Disable Management NIC
       command: ifconfig ens35 down
-
-#     - name: Disable Management NIC
-#       nmcli:
-#         conn_name: ens35
-#         type: ethernet
-#         method4: disabled
-#         method6: disabled
-#         state: present

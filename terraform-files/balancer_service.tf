@@ -1,8 +1,8 @@
 # Balancer service host deployment 
 
 resource "esxi_guest" "lb001" {
-  guest_name = "lb001"
-  disk_store = "DS001"
+  guest_name = var.balancer_hostname
+  disk_store = var.esxi_datastore
   guestos    = "ubuntu-64"
 
   boot_disk_type = "thin"
@@ -39,7 +39,7 @@ resource "esxi_guest" "lb001" {
   }
 
   network_interfaces {
-    virtual_network = "VM Network" 
+    virtual_network = var.esxi_default_network
     nic_type        = "e1000"
   }
   
@@ -47,7 +47,6 @@ resource "esxi_guest" "lb001" {
   guest_shutdown_timeout = 30
 
   provisioner "local-exec" {
-    # TODO: implement configuration write_files and set proper ownership for kuma docker image).
     command = <<EOT
       echo '${self.guest_name}: ${self.ip_address}' >> ./logs/infrastructure_deployment_report.txt
     EOT

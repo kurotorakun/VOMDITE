@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  vars_files:
+    - chr_vars.yml
+  environment:
+    remote_tmp: /
+
+  tasks:
+    - name: Disable FW rule to block youtube
+      routeros_command:
+        commands: /ip firewall filter set [find where layer7-protocol="youtube-block"] disabled="yes"
+        

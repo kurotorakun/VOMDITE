@@ -4,6 +4,12 @@
 #############################################################
 
 # [ NETWORK LIST]
+variable "esxi_default_network" {
+  description = "Default VMWare VM Network"
+  type        = string
+  default     = "VM Network"
+}
+
 variable "network_list" {
   description = "List of object that contains the network names. Used on vSwitch and PortGroups"
   type        = list(object({ 

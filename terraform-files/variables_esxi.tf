@@ -26,3 +26,9 @@ variable "esxi_password" {        # Password will be prompted, if it's not set o
   type        = string
   sensitive   = true
 }
+
+variable "esxi_datastore" {
+  description = "ESXi datastore"
+  type        = string
+  default     = "DS001"
+}
