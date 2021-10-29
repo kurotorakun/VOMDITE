@@ -77,6 +77,6 @@ resource "esxi_guest" "mon001" {
     EOT
   }
   
-  depends_on = [esxi_guest.ans001 ]
+  depends_on = [esxi_guest.lb001 ]
 
 }

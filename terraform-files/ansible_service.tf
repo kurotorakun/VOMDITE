@@ -74,10 +74,6 @@ resource "esxi_guest" "ans001" {
   provisioner "local-exec" {
     command = <<EOT
       echo '${self.guest_name}: ${self.ip_address}' >> ./logs/infrastructure_deployment_report.txt
-      ssh-keygen -R ${var.VMNetwork_CIDR}.${var.ansible_address}
-      ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'sudo mv /home/tmp/ssh/* ./.ssh/'
-      ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'sudo chown ubuntu:ubuntu ./.ssh/*id_rsa*'
-      ansible-playbook ${var.local_ansible_files_path}/ansible-host-deploy/ansible_playbook.yml -i ${var.VMNetwork_CIDR}.${var.ansible_address}, -u ${var.linux_username}
     EOT
   }
   

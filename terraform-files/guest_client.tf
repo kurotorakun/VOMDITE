@@ -35,6 +35,6 @@ resource "esxi_guest" "guest001" {
     EOT
   }
 
-  depends_on = [ esxi_guest.chr-lan, esxi_guest.lb001, null_resource.deploy_monitoring ]
+  depends_on = [ esxi_guest.chr-lan, esxi_guest.lb001, esxi_guest.ans001 ]
 
 }
