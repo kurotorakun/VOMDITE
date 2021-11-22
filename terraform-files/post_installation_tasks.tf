@@ -11,6 +11,8 @@ resource "null_resource" "deploy_uptime" {
   provisioner "local-exec" {
     command = <<EOT
       ssh-keygen -R ${var.VMNetwork_CIDR}.${var.uptime_address}
+      echo "Waiting uptime service to be up..."
+      sleep 30
       ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.uptime_address} 'echo $HOSTNAME is alive'
       ansible-playbook ${var.local_ansible_files_path}/ansible-uptime-deploy/uptime_playbook.yml -i ${var.VMNetwork_CIDR}.${var.uptime_address}, -u ${var.linux_username}
     EOT
@@ -45,7 +47,7 @@ resource "null_resource" "deploy_monitoring" {
     command = <<EOT
       ssh-keygen -R ${var.VMNetwork_CIDR}.${var.monitoring_address}
       ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.monitoring_address} 'echo $HOSTNAME is alive'
-      ansible-playbook ${var.local_ansible_files_path}/ansible-monitoring-deploy/monitoring_playbook.yml -i ${var.VMNetwork_CIDR}.${var.monitoring_address}, -u ${var.linux_username}
+      ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'ansible-playbook /ansible_data/ansible-monitoring-deploy/monitoring_playbook.yml -i ${var.VMNetwork_CIDR}.${var.monitoring_address}, -u ${var.linux_username}'
     EOT
   }
 
@@ -57,8 +59,6 @@ resource "null_resource" "deploy_monitoring" {
 resource "null_resource" "deploy_applications" {
 
   provisioner "local-exec" {
-    # rsync -r --exclude '*.tpl' '${var.local_ansible_files_path}/ansible-application-deploy' ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address}:/home/ubuntu/
-    # rm ${var.local_ansible_files_path}/ansible-application-deploy/application_inventory.yml
     command = <<EOT
       ssh-keygen -R ${var.VMNetwork_CIDR}.${var.ansible_address}
       ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'echo $HOSTNAME is alive'

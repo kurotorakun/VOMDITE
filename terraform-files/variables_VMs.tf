@@ -1,5 +1,5 @@
 #############################################################
-#  Linux VMs vars
+#  Linux VMs variables
 #    Do not edit if you are not sure of what are you doing.
 #############################################################
 

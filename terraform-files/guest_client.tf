@@ -16,8 +16,11 @@ resource "esxi_guest" "guest001" {
   ovf_source        = "${var.ovf_repository_path}/${var.ovf_path_guesthost}"
     
   guestinfo = {
+    "userdata.encoding" = "base64"
+    "userdata"          = base64encode(local.guest_userDefault)
     "metadata.encoding" = "base64"
     "metadata"          = base64encode(local.guest_metaDefault)
+
   }
   
   # Current Terraform version only allows iterative structures on resources. network_interface is not allowed.

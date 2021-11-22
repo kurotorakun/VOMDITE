@@ -1,5 +1,5 @@
 #############################################################
-#  VMs Procurement vars
+#  VMs Procurement variables
 #    Do not edit if you are not sure of what are you doing.
 #############################################################
 
@@ -69,10 +69,13 @@ variable "ovf_path_balancerhost" {                                   # Ansible S
 variable "ovf_path_guesthost" {                                      # Ansible Service OVF
   description = "Guest client OVF Image"
   type        = string
-  default     = "xubuntu-cloudimg/xubuntu2004.ovf" 
+  # default     = "xubuntu-cloudimg/xubuntu2004.ovf" # LEGACY
+  default     = "focal-server-cloudimg-amd64.ova" 
 }
 
 # [ VMs IDs & HOSTNAMEs ]
+#   List of names used on VM IDs and Hostname (were possible)
+
 variable "ansible_hostname" {
   type        = string
   default     = "ans001"  
@@ -129,14 +132,15 @@ variable "guest_hostname" {
 }
 
 # [ ANSIBLE PATHS ]
+
 variable "local_ansible_files_path" {
   description = "Local Ansible Path"
   type        = string
-  default     = "/home/project/VOMDITE/ansible-files" 
+  default     = "../ansible-files" 
 }
 
 variable "ansibleservice_ansible_files_path" {
   description = "Local Ansible Path"
   type        = string
-  default     = "/home/ubuntu/ansible-playbooks" 
+  default     = "/ansible_data" 
 }

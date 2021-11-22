@@ -1,5 +1,5 @@
 #############################################################
-#  Networking vars
+#  Networking variables
 #    Do not edit if you are not sure of what are you doing.
 #############################################################
 
@@ -50,19 +50,19 @@ variable "WAN1_uplink_CIDR" {
 variable "WAN2_uplink_CIDR" {
   description = "WAN1 Uplink Network Segment (AZ0)"
   type        = string
-  default     = "10.0.2" 
+  default     = "10.0.1" 
 }
 
 variable "DCWAN1_uplink_CIDR" {
   description = "DC-WAN1 Uplink Network Segment (AZ0)"
   type        = string
-  default     = "10.1.1" 
+  default     = "10.0.1" 
 }
 
 variable "DCWAN2_uplink_CIDR" {
   description = "DC-WAN2 Uplink Network Segment (AZ0)"
   type        = string
-  default     = "10.1.2" 
+  default     = "10.0.1" 
 }
 
 variable "DC_uplink_CIDR" {

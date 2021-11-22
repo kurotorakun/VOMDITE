@@ -1,4 +1,4 @@
-# Dynamic (tempalte) Datafiles 
+# Dynamic (tempalte) Datafiles
 
 locals {
   ### [ CONFIGURATION FILES ]
@@ -27,6 +27,18 @@ locals {
     BALADDRESS        = var.balancer_address
     ANSADDRESS        = var.ansible_address
     UPADDRESS         = var.uptime_address
+  })
+
+  monitoring_playbook_yml = templatefile("../ansible-files/ansible-monitoring-deploy/monitoring_playbook.yml.tpl", {
+    ESXIUSER          = var.esxi_username
+    ESXIPASS          = var.esxi_password
+    ESXIHOST          = var.esxi_hostname
+    VMNETWORKCIDR     = var.VMNetwork_CIDR
+    MONADDRESS        = var.monitoring_address
+  })
+
+  test_application_sh = templatefile("./template_files/test_application.sh.tpl", {
+    WAN1UPLINKCIDR    = var.WAN1_uplink_CIDR
   })
 
   ### [ SERVICES METADATA ]
@@ -104,6 +116,7 @@ locals {
   ansible_userDefault = templatefile("./template_files/ansible.userdata.tpl",{
     ANSIBLEKEY        = base64encode(data.local_file.ansible_id_rsa.content)       # BEST PRACTICE for files to be written in the host
     ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content                 # Use this only for simple files
+    ANSIBLEPATH       = var.ansibleservice_ansible_files_path
     NOIPV6            = base64encode(data.local_file.no_IPv6.content)
     BALANCERPB        = base64encode(data.local_file.balancer_playbook_yml.content)
     APPPB             = base64encode(data.local_file.application_playbook_yml.content)
@@ -113,6 +126,7 @@ locals {
     CHRLANFWL7DEPLOY  = base64encode(data.local_file.chr_lan_FWL7_deployment_yml.content)
     CHRLANDISFWL7     = base64encode(data.local_file.chr_lan_disable_FWL7_yml.content)
     CHRLANENAFWL7     = base64encode(data.local_file.chr_lan_enable_FWL7_yml.content)
+    MONITORINGPB      = base64encode(local.monitoring_playbook_yml)
   })
 
   # MON001 - USERDATA
@@ -121,7 +135,7 @@ locals {
   })
   
   # UP001 - USERDATA
-  uptime_userDefault = templatefile("./template_files/uptime.userdata.tpl",{
+  uptime_userDefault  = templatefile("./template_files/uptime.userdata.tpl",{
     KUMADB            = filebase64("../ansible-files/ansible-uptime-deploy/kuma.db")
   })
   
@@ -131,8 +145,13 @@ locals {
   })
 
   # SRV0xx - SRV1xx - USERDATA
-  noipv6_userDefault = templatefile("./template_files/noipv6.userdata.tpl",{
+  noipv6_userDefault  = templatefile("./template_files/noipv6.userdata.tpl",{
     NOIPV6            = base64encode(data.local_file.no_IPv6.content)
+  })
+
+  # GUEST001 - USERDATA
+  guest_userDefault = templatefile("./template_files/guest.userdata.tpl",{
+    TESTAPPSH         = base64encode(local.test_application_sh)
   })
 
 }
