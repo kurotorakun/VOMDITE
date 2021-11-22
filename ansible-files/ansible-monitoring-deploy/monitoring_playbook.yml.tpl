@@ -90,9 +90,9 @@
         ports:
           - "9272:9272"
         env:
-          VSPHERE_USER: "root"
-          VSPHERE_PASSWORD: "!V0MD1T3"
-          VSPHERE_HOST: "192.168.27.141"
+          VSPHERE_USER: "${ESXIUSER}"
+          VSPHERE_PASSWORD: "${ESXIPASS}"
+          VSPHERE_HOST: "${ESXIHOST}"
           VSPHERE_IGNORE_SSL: "True" 
           VSPHERE_SPECS_SIZE: "2000"
         state: started
@@ -134,7 +134,7 @@
     - name: Load default datasource
       grafana_datasource:
         name: Prometheus
-        grafana_url: http://192.168.27.251/
+        grafana_url: http://${VMNETWORKCIDR}.${MONADDRESS}/
         url_username: "admin"
         url_password: "VOMDITE"
         ds_type: prometheus
@@ -145,7 +145,7 @@
 
     - name: Load default dashboards (Node-exporter)
       grafana_dashboard:
-        grafana_url: http://192.168.27.251/
+        grafana_url: http://${VMNETWORKCIDR}.${MONADDRESS}/
         url_username: "admin"
         url_password: "VOMDITE"
         dashboard_id: 1860
@@ -153,7 +153,7 @@
 
     - name: Load default dashboards (Blackbox-exporter)
       grafana_dashboard:
-        grafana_url: http://192.168.27.251/
+        grafana_url: http://${VMNETWORKCIDR}.${MONADDRESS}/
         url_username: "admin"
         url_password: "VOMDITE"
         dashboard_id: 7587
@@ -161,7 +161,7 @@
 
     - name: Load default dashboards (Mikrotik SNMP)
       grafana_dashboard:
-        grafana_url: http://192.168.27.251/
+        grafana_url: http://${VMNETWORKCIDR}.${MONADDRESS}/
         url_username: "admin"
         url_password: "VOMDITE"
         dashboard_id: 11589
@@ -169,7 +169,7 @@
 
     - name: Load default dashboards (ESXi-exporter)
       grafana_dashboard:
-        grafana_url: http://192.168.27.251/
+        grafana_url: http://${VMNETWORKCIDR}.${MONADDRESS}/
         url_username: "admin"
         url_password: "VOMDITE"
         dashboard_id: 11243

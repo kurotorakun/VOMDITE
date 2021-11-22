@@ -50,3 +50,29 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: ${VMNETWORKCIDR}.${MONADDRESS}:9116    # The SNMP exporter's real hostname:port.
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx] # Look for a HTTP 200 response.
+    static_configs:
+      - targets:
+        - http://${WAN1UPLINKCIDR}.1
+        - http://${DCUPLINKCIDR}.${BALADDRESS}
+        - http://${VMNETWORKCIDR}.${UPADDRESS}
+%{ for app_srv in APPSERVERS ~}
+        - http://${APPSERVICEAZ0CIDR}.${app_srv.name}
+        - http://${APPSERVICEAZ1CIDR}.${app_srv.name}
+%{ endfor ~}
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: ${VMNETWORKCIDR}.${MONADDRESS}:9115 # The blackbox exporter's real hostname:port.
+  - job_name: 'vmware_vcenter'
+    metrics_path: '/metrics'
+    scrape_timeout: 15s
+    static_configs:
+      - targets:
+        - '${VMNETWORKCIDR}.${MONADDRESS}:9272'

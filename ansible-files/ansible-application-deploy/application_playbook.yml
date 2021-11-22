@@ -33,7 +33,7 @@
         source: pull
 
     # Pulling Monitoring Agent Image
-    - name: Pull default Application Docker image
+    - name: Pull Monitoring Docker image
       docker_image:
         name: "quay.io/prometheus/node-exporter:latest"
         source: pull
