@@ -1,0 +1,8 @@
+---
+
+- hosts: all
+  become: true
+
+  tasks:
+    - name: Disable Management NIC
+      command: ifconfig ens35 down
