@@ -18,6 +18,11 @@ write_files:
     permissions: "0644"
     owner: root:root
     content: ${BALANCERPB}
+  - path: ${ANSIBLEPATH}/balancer_update/balancer_playbook.yml
+    encoding: b64
+    permissions: "0644"
+    owner: root:root
+    content: ${BALANCERUP}    
   - path: ${ANSIBLEPATH}/application_deploy/application_playbook.yml
     encoding: b64
     permissions: "0644"

@@ -38,3 +38,6 @@ override.tf.json
 
 # Ignore gitconfig file
 *.gitconfig*
+
+# Ignore logs folders
+**/logs/*

@@ -36,9 +36,13 @@ data "local_file" "application_vars_yml" {
     filename   = "../ansible-files/ansible-application-deploy/application_vars.yml"
 }
 
-# 2.- Ansible Balancer service deployment
-data "local_file" "balancer_playbook_yml" {
-    filename   = "../ansible-files/ansible-balancer-deploy/balancer_playbook.yml"
+# 2.- Ansible Balancer service deployment and update
+data "local_file" "balancer_deploy_playbook_yml" {
+    filename   = "../ansible-files/ansible-balancer-deploy/balancer_deploy_playbook.yml"
+}
+
+data "local_file" "balancer_update_playbook_yml" {
+    filename   = "../ansible-files/ansible-balancer-update/balancer_update_playbook.yml"
 }
 
 # 3.- Ansible Mikrotik CHR service "upgrade" deployment

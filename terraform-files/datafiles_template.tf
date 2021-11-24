@@ -118,7 +118,8 @@ locals {
     ANSIBLEPUBKEY     = data.local_file.ansible_id_rsa_pub.content                 # Use this only for simple files
     ANSIBLEPATH       = var.ansibleservice_ansible_files_path
     NOIPV6            = base64encode(data.local_file.no_IPv6.content)
-    BALANCERPB        = base64encode(data.local_file.balancer_playbook_yml.content)
+    BALANCERPB        = base64encode(data.local_file.balancer_deploy_playbook_yml.content)
+    BALANCERUP        = base64encode(data.local_file.balancer_update_playbook_yml.content)
     APPPB             = base64encode(data.local_file.application_playbook_yml.content)
     APPVARS           = base64encode(data.local_file.application_vars_yml.content)
     APPINVENTORY      = base64encode(local.application_inventory_yml)
