@@ -8,7 +8,15 @@
 #
 ###########################################################################################
 
-# [ESXi PARAMETERS ]
+# [ NETWORK PARAMETERS ]
+
+variable "VMNetwork_CIDR" {                  # Set this CIDR to the network of your: 
+  description = "VM Network CIDR"            #   - VM Ware workstation 'NAT' network, or
+  type        = string                       #   - ESXi VMNetwork (default vNetwork).
+  default     = "192.168.27"
+}
+
+# [ ESXi PARAMETERS ]
 
 variable "esxi_hostname" {                   # Set to your ESXi host IP/hostname
   description = "ESXi host address"          #  NOTE: if you need to modify ESXi ports (ssh and/or HTTPS)
@@ -35,3 +43,4 @@ variable "host_pubkey_path" {                # WORKSPACE host Public Key
   type        = string                       #   Mind that these key pair must be created
   default     = "/home/abc/.ssh/id_rsa.pub"  #   first. 
 }
+

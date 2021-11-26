@@ -29,11 +29,11 @@ variable "network_list" {
 }
 
 # [ NETWORKING ADDRESSING ]
-variable "VMNetwork_CIDR" {       # Set this CIDR to the network of your VM Ware workstation 'NAT' network
-  description = "VM Network CIDR"
-  type        = string
-  default     = "192.168.27"
-}
+# variable "VMNetwork_CIDR" {        # Moved to User parameters.
+#   description = "VM Network CIDR"
+#   type        = string
+#   default     = "192.168.27"
+# }
 
 variable "LAN_CIDR" {
   description = "LAN Network Segment"
