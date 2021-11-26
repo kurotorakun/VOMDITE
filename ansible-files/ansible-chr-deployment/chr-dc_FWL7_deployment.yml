@@ -1,0 +1,16 @@
+---
+
+- hosts: all
+  vars_files:
+    - chr_vars.yml
+  environment:
+    remote_tmp: /
+
+  tasks:
+    - name: Add L7 Protocol to malicious URL
+      routeros_command:
+        commands: /ip firewall layer7-protocol add comment="MALICIOUS URL L7" name=maliciousURL-block regexp="^.+(/\?).(malicious).+\$"
+
+    - name: Add FW rule to block malicious URL
+      routeros_command:
+        commands: /ip firewall filter add action=drop chain=forward comment="Drop malicious URL attack (downstream)" layer7-protocol=maliciousURL-block log=yes log-prefix="[ MALICIOUS URL BAN ]" port=80,443 protocol=tcp

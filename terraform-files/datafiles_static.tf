@@ -54,6 +54,10 @@ data "local_file" "chr_lan_FWL7_deployment_yml"{
     filename   = "../ansible-files/ansible-chr-deployment/chr-lan_FWL7_deployment.yml"
 }
 
+data "local_file" "chr_dc_FWL7_deployment_yml"{
+    filename   = "../ansible-files/ansible-chr-deployment/chr-dc_FWL7_deployment.yml"
+}
+
 data "local_file" "chr_lan_disable_FWL7_yml"{
     filename   = "../ansible-files/ansible-chr-deployment/chr-lan_disable_FWL7.yml"
 }

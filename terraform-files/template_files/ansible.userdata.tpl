@@ -1,5 +1,8 @@
 #cloud-config
 
+manage_etc_hosts:
+  default: true
+
 write_files:
   - path: /home/tmp/ssh/id_rsa
     encoding: b64
@@ -43,17 +46,22 @@ write_files:
     permissions: "0644"
     owner: root:root
     content: ${CHRVARS}
-  - path: ${ANSIBLEPATH}/chr_deploy/chr_FWL7_deployment.yml
+  - path: ${ANSIBLEPATH}/chr_deploy/chr-lan_FWL7_deployment.yml
     encoding: b64
     permissions: "0644"
     owner: root:root
     content: ${CHRLANFWL7DEPLOY}
-  - path: ${ANSIBLEPATH}/chr_deploy/chr_disable_FWL7.yml
+  - path: ${ANSIBLEPATH}/chr_deploy/chr-dc_FWL7_deployment.yml
+    encoding: b64
+    permissions: "0644"
+    owner: root:root
+    content: ${CHRDCFWL7DEPLOY}    
+  - path: ${ANSIBLEPATH}/chr_deploy/chr-lan_disable_FWL7.yml
     encoding: b64
     permissions: "0644"
     owner: root:root
     content: ${CHRLANDISFWL7}
-  - path: ${ANSIBLEPATH}/chr_deploy/chr_enable_FWL7.yml
+  - path: ${ANSIBLEPATH}/chr_deploy/chr-lan_enable_FWL7.yml
     encoding: b64
     permissions: "0644"
     owner: root:root

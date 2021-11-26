@@ -125,6 +125,7 @@ locals {
     APPINVENTORY      = base64encode(local.application_inventory_yml)
     CHRVARS           = base64encode(data.local_file.chr_vars_yml.content)
     CHRLANFWL7DEPLOY  = base64encode(data.local_file.chr_lan_FWL7_deployment_yml.content)
+    CHRDCFWL7DEPLOY   = base64encode(data.local_file.chr_dc_FWL7_deployment_yml.content)
     CHRLANDISFWL7     = base64encode(data.local_file.chr_lan_disable_FWL7_yml.content)
     CHRLANENAFWL7     = base64encode(data.local_file.chr_lan_enable_FWL7_yml.content)
     MONITORINGPB      = base64encode(local.monitoring_playbook_yml)
@@ -166,7 +167,7 @@ data "template_file" "srv_az0_metaDefault" {
   vars         = {
     CIDRBLOCK       = var.appservice_AZ0_CIDR
     IPADDRESS       = each.key
-    HOSTNAME        = "${var.app_az0_hostname}{each.key}"
+    HOSTNAME        = "${var.app_az0_hostname}${each.key}"
     HOSTPUBKEY      = data.local_file.host_pubkey.content            # Use this only for simple files
     ANSIBLEPUBKEY   = data.local_file.ansible_id_rsa_pub.content     # Use this only for simple files
   }

@@ -13,4 +13,4 @@
 
     - name: Add FW rule to block youtube
       routeros_command:
-        commands: /ip firewall filter add action=drop chain=forward layer7-protocol=youtube-block comment="Block access to YouTube.com" disabled=yes
+        commands: /ip firewall filter add action=drop chain=forward layer7-protocol=youtube-block comment="Block access to YouTube.com" log=yes log-prefix="[ YOUTUBE BAN ]" disabled=yes

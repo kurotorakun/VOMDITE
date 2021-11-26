@@ -23,11 +23,17 @@ resource "null_resource" "deploy_uptime" {
 
 # 1.- Deploy ansible service
 resource "null_resource" "deploy_ansible" {
+    triggers = {  # This trigger forces the execution of the script on each terraform run.
+    always_run = timestamp() 
+  }
+
   provisioner "local-exec" {
     command = <<EOT
       ssh-keygen -R ${var.VMNetwork_CIDR}.${var.ansible_address}
-      ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'sudo mv /home/tmp/ssh/* ./.ssh/'
-      ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'sudo chown ubuntu:ubuntu ./.ssh/*id_rsa*'
+      echo "Waiting ansible service to be up..."
+      sleep 10
+      ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'sudo cp /home/tmp/ssh/* ./.ssh/'
+      ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'sudo chown ubuntu:ubuntu ./.ssh/*id_rsa*'
       ansible-playbook ${var.local_ansible_files_path}/ansible-host-deploy/ansible_playbook.yml -i ${var.VMNetwork_CIDR}.${var.ansible_address}, -u ${var.linux_username}
     EOT
   }
@@ -42,12 +48,14 @@ resource "null_resource" "deploy_monitoring" {
   provisioner "local-exec" {
     command = <<EOT
       ssh-keygen -R ${var.VMNetwork_CIDR}.${var.monitoring_address}
-      ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.monitoring_address} 'echo $HOSTNAME is alive'
-      ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'ansible-playbook /ansible_data/ansible-monitoring-deploy/monitoring_playbook.yml -i ${var.VMNetwork_CIDR}.${var.monitoring_address}, -u ${var.linux_username}'
+      ssh-keygen -R ${var.VMNetwork_CIDR}.${var.ansible_address}
+      ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'ssh-keygen -R ${var.VMNetwork_CIDR}.${var.monitoring_address}'
+      ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} "ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.monitoring_address} 'echo $HOSTNAME is alive'"
+      ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'ansible-playbook /ansible_data/monitoring_deploy/monitoring_playbook.yml -i ${var.VMNetwork_CIDR}.${var.monitoring_address}, -u ${var.linux_username}'
     EOT
   }
 
-  depends_on = [ null_resource.deploy_ansible, esxi_guest.mon001 ]
+  depends_on = [ esxi_guest.ans001, null_resource.deploy_ansible, esxi_guest.mon001 ]
 
 }
 
@@ -73,11 +81,13 @@ resource "null_resource" "deploy_balancer" {
     command = <<EOT
       ssh-keygen -R ${var.VMNetwork_CIDR}.${var.ansible_address}
       ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'echo $HOSTNAME is alive'
+      ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'ssh-keygen -R ${var.DC_uplink_CIDR}.${var.balancer_address}' 
+      ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} "ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.DC_uplink_CIDR}.${var.balancer_address} 'echo $HOSTNAME is alive'"
       ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'ansible-playbook /ansible_data/balancer_deploy/balancer_playbook.yml -i ${var.DC_uplink_CIDR}.${var.balancer_address}, -u ${var.linux_username}'
     EOT
   }
 
-  depends_on = [ null_resource.deploy_applications, esxi_guest.lb001, esxi_guest.ans001 ]
+  depends_on = [ null_resource.deploy_applications, esxi_guest.lb001, esxi_guest.ans001, null_resource.deploy_ansible ]
   
 }
 
@@ -94,10 +104,12 @@ resource "null_resource" "adjust_balancer" {
     command = <<EOT
       ssh-keygen -R ${var.VMNetwork_CIDR}.${var.ansible_address}
       ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'echo $HOSTNAME is alive'
+      ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'ssh-keygen -R ${var.DC_uplink_CIDR}.${var.balancer_address}' 
+      ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} "ssh -o StrictHostKeyChecking=no -t ${var.linux_username}@${var.DC_uplink_CIDR}.${var.balancer_address} 'echo $HOSTNAME is alive'"
       ssh -t ${var.linux_username}@${var.VMNetwork_CIDR}.${var.ansible_address} 'ansible-playbook /ansible_data/balancer_update/balancer_playbook.yml -i ${var.DC_uplink_CIDR}.${var.balancer_address}, -u ${var.linux_username}'
     EOT
   }
 
-  depends_on = [ esxi_guest.ans001, esxi_guest.lb001 ]
+  depends_on = [ esxi_guest.ans001, esxi_guest.lb001, null_resource.deploy_ansible, null_resource.deploy_balancer ]
   
 }

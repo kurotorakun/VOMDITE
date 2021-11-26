@@ -3,6 +3,9 @@
 instance-id: ${HOSTNAME}
 local-hostname: ${HOSTNAME}
 
+hostname: ${HOSTNAME}
+fqdn: ${HOSTNAME}
+
 public-keys: 
   - ${HOSTPUBKEY}
 
