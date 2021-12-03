@@ -157,7 +157,7 @@
         url_username: "admin"
         url_password: "VOMDITE"
         dashboard_id: 13659
-        dashboard_revision: 3
+        dashboard_revision: 1
 
     - name: Load default dashboards (Mikrotik SNMP)
       grafana_dashboard:
