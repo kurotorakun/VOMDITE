@@ -15,4 +15,4 @@ printf "${YELLOW}[ $(date -Iseconds) ] [VOMDITE Workspace] Starting terraforming
 terraform -chdir=/home/project/terraform-files apply
 
 printf "${YELLOW}[ $(date -Iseconds) ] [VOMDITE Workspace] Terraforming process completed. Review any error output. ${NC}\n"
-printf "                              Access workspace through http://localhost:8025/ to review any error.\n"
+printf "                              Access workspace through http://$(hostname):8025/ to review any error.\n"
