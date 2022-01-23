@@ -11,10 +11,6 @@ NC='\033[0m'
 printf "${YELLOW}[ $(date -Iseconds) ] [VOMDITE Workspace] Generating workspace SSH key pair... ${NC}\n"
 ssh-keygen
 
-# .- Clone VOMDITE repository
-printf "${YELLOW}[ $(date -Iseconds) ] [VOMDITE Workspace] Downloading VOMDITE... ${NC}\n"
-git clone https://github.com/kurotorakun/VOMDITE.git /home/project/
-
 # .- Generate ssh keys on ./VOMDITE/terraform-files/ssh_keys/
 printf "${YELLOW}[ $(date -Iseconds) ] [VOMDITE Workspace] Generating internal Ansible Service SSH key pair... ${NC}\n"
 mkdir /home/project/terraform-files/ssh_keys
